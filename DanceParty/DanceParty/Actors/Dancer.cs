@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using SkinnedModel;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using DanceParty.Cameras;
+
+namespace DanceParty.Actors
+{
+    public class Dancer
+    {
+        /// <summary>
+        /// We know that the models from blender are in a different orientation and scaled 
+        /// very small (1 unit = 1 meter, Z is up)
+        /// </summary>
+        public static Matrix ModelAdjustment = Matrix.CreateScale(100) * Matrix.CreateRotationX(-MathHelper.PiOver2);
+
+        /// <summary>
+        /// The animation controller for this dancer.
+        /// </summary>
+        private AnimationPlayer _animationPlayer;
+
+        /// <summary>
+        /// The model for this dancer.
+        /// </summary>
+        private Model _model;
+
+        /// <summary>
+        /// The skin texture for this model.
+        /// </summary>
+        private Texture2D _skin;
+
+        /// <summary>
+        /// The position of this dancer.
+        /// </summary>
+        public Vector3 Position;
+
+        /// <summary>
+        /// The direction the dancer is facing.
+        /// </summary>
+        public Vector3 Forward;
+
+        /// <summary>
+        /// The direction which is 'up' for this dancer.
+        /// </summary>
+        public Vector3 Up;
+
+        /// <summary>
+        /// The world matrix for this dancer.
+        /// </summary>
+        private Matrix _worldMatrix;
+        public Matrix WorldMatrix
+        {
+            get
+            {
+                return _worldMatrix;
+            }
+        }
+
+        public Dancer(Model model, Texture2D skin)
+        {
+            _model = model;
+            _skin = skin;
+            _animationPlayer = new AnimationPlayer((SkinningData)_model.Tag);
+
+            _animationPlayer.StartClip("Dancing");
+
+            Position = Vector3.Zero;
+            Forward = Vector3.UnitZ;
+            Up = Vector3.UnitY;
+
+            _worldMatrix = Matrix.CreateWorld(Position, Forward, Up);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            // Update the animation of this dancer.
+            _animationPlayer.Update(gameTime.ElapsedGameTime, true, ModelAdjustment);
+
+            // Update the world transform of this dancer.
+            Matrix.CreateWorld(ref Position, ref Forward, ref Up, out _worldMatrix);
+        }
+
+        /// <summary>
+        /// Draws this dancer to the screen using the passed in camera.
+        /// </summary>
+        public void Draw(PerspectiveCamera camera)
+        {
+            // Get the transformed positions of all the bones.
+            Matrix[] bones = _animationPlayer.GetSkinTransforms();
+
+            // Draw the model. A model can have multiple meshes, so loop.
+            foreach (ModelMesh mesh in _model.Meshes)
+            {
+                foreach (SkinnedEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.SetBoneTransforms(bones);
+                    effect.World = _worldMatrix;
+
+                    effect.View = camera.ViewMatrix;
+                    effect.Projection = camera.ProjectionMatrix;
+
+                    effect.Texture = _skin;
+                }
+
+                // Draw the mesh, using the effects set above.
+                mesh.Draw();
+            }
+        }
+    }
+}
