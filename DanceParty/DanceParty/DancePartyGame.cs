@@ -33,6 +33,13 @@ namespace DanceParty
         private FPSTracker _fpsTracker;
         private Accelerometer _accelerometer;
 
+        private int _numRowsCols = 16;
+
+        private SpriteFont _segoeUI;
+        private Random r = new Random();
+
+        float cameraAngle = 0.0f;
+
         public DancePartyGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -64,10 +71,6 @@ namespace DanceParty
             base.Initialize();
         }
 
-        SpriteFont _segoeUI;
-
-        Random r = new Random();
-
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -77,12 +80,12 @@ namespace DanceParty
             _segoeUI = Content.Load<SpriteFont>("Fonts\\SegoeUI");
             Texture2D manSkin = Content.Load<Texture2D>("Textures\\male0");
 
-            for (int i = 0; i < numModels; i++)
+            for (int i = 0; i < _numRowsCols; i++)
             {
-                for (int j = 0; j < numModels; j++)
+                for (int j = 0; j < _numRowsCols; j++)
                 {
                     Dancer newDancer = new Dancer(manModel, manSkin);
-                    newDancer.Position = new Vector3((i - numModels / 2) * 100, 0, (j - numModels / 2) * 100);
+                    newDancer.Position = new Vector3((i - _numRowsCols / 2) * 100, 0, (j - _numRowsCols / 2) * 100);
 
                     // Randomly update them so they're not in sync.
                     newDancer.Update(new GameTime(new TimeSpan(), new TimeSpan(0, 0, 0, r.Next(2), r.Next(2000))));
@@ -96,8 +99,6 @@ namespace DanceParty
             _accelerometer.Start();
             GC.Collect();
         }
-
-        public int numModels = 16;
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -114,10 +115,10 @@ namespace DanceParty
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
 
-            modelRotation += (float)gameTime.ElapsedGameTime.TotalSeconds * _accelerometer.CurrentValue.Acceleration.Y;
-            _camera.Position.X = (float)(1000.0f * Math.Sin(modelRotation));
+            cameraAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * _accelerometer.CurrentValue.Acceleration.Y;
+            _camera.Position.X = (float)(1000.0f * Math.Sin(cameraAngle));
             _camera.Position.Y = 750f;
-            _camera.Position.Z = (float)(1000.0f * Math.Cos(modelRotation));
+            _camera.Position.Z = (float)(1000.0f * Math.Cos(cameraAngle));
             _camera.Update();
 
             // Allows the game to exit
@@ -127,8 +128,6 @@ namespace DanceParty
             
             base.Update(gameTime);
         }
-
-        float modelRotation = 0.0f;
 
         protected override void Draw(GameTime gameTime)
         {
@@ -161,6 +160,5 @@ namespace DanceParty
 
             base.Draw(gameTime);
         }
-
     }
 }
