@@ -14,9 +14,10 @@ using SkinnedModel;
 using DanceParty.Cameras;
 
 using DanceParty.Actors;
+using DanceParty.Actors.DancerBehaviors;
 using DanceParty.Utilities;
-
-using Microsoft.Devices.Sensors;
+using DanceParty.Utilities.Accelerometer;
+using DanceParty.Cameras.CameraControllerBehaviors;
 
 namespace DanceParty
 {
@@ -28,17 +29,17 @@ namespace DanceParty
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private PerspectiveCamera _camera;
+        private CongaLine _congaLine;
+
         private List<Dancer> _dancers;
         private FPSTracker _fpsTracker;
-        private Accelerometer _accelerometer;
+        private CameraController _cameraController;
+        private IAccelerometerWrapper _accelerometer;
 
         private int _numRowsCols = 16;
 
         private SpriteFont _segoeUI;
         private Random r = new Random();
-
-        float cameraAngle = 0.0f;
 
         public DancePartyGame()
         {
@@ -56,6 +57,7 @@ namespace DanceParty
 
             _dancers = new List<Dancer>();
             _fpsTracker = new FPSTracker();
+            _accelerometer = AccelerometerFactory.GetAccelerometer();
         }
 
         /// <summary>
@@ -89,14 +91,20 @@ namespace DanceParty
 
                     // Randomly update them so they're not in sync.
                     newDancer.Update(new GameTime(new TimeSpan(), new TimeSpan(0, 0, 0, r.Next(2), r.Next(2000))));
-
                     _dancers.Add(newDancer);
                 }
             }
+            Dancer leader = new Dancer(manModel, manSkin);
+            leader.SetDancerBehavior(new LeadDancerBehavior(leader));
+            _congaLine = new CongaLine(leader);
 
-            _camera = new PerspectiveCamera(GraphicsDevice);
-            _accelerometer = new Accelerometer();
+            PerspectiveCamera camera = new PerspectiveCamera(GraphicsDevice);
+
+            _cameraController = new CameraController(camera);
+            _cameraController.SetCameraBehavior(new BehindViewBehavior(camera, _congaLine.LeadDancer));
+
             _accelerometer.Start();
+            
             GC.Collect();
         }
 
@@ -107,19 +115,34 @@ namespace DanceParty
         protected override void UnloadContent()
         {
             _accelerometer.Stop();
+
             // TODO: Unload any non ContentManager content here
         }
 
         protected override void Update(GameTime gameTime)
         {
+            _congaLine.LeadDancer.Forward = 
+                Vector3.Transform(
+                    _congaLine.LeadDancer.Forward, 
+                    Matrix.CreateRotationY(
+                        _accelerometer.CurrentReading.Y * 
+                        (float)gameTime.ElapsedGameTime.TotalSeconds));
+            
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
 
-            cameraAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * _accelerometer.CurrentValue.Acceleration.Y;
-            _camera.Position.X = (float)(1000.0f * Math.Sin(cameraAngle));
-            _camera.Position.Y = 750f;
-            _camera.Position.Z = (float)(1000.0f * Math.Cos(cameraAngle));
-            _camera.Update();
+            _congaLine.Update(gameTime);
+
+            for (int i = 0; i < _dancers.Count; i++)
+            {
+                if (_dancers[i].CollidesWith(_congaLine.LeadDancer))
+                {
+                    _congaLine.AppendDancer(_dancers[i]);
+                    _dancers.RemoveAt(i--);
+                }
+            }
+
+            _cameraController.Update(gameTime);
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
@@ -141,7 +164,9 @@ namespace DanceParty
             GraphicsDevice.SamplerStates[0] = ss;
 
             foreach (Dancer dancer in _dancers)
-                dancer.Draw(_camera);
+                dancer.Draw(_cameraController.Camera);
+
+            _congaLine.Draw(_cameraController.Camera);
 
             spriteBatch.Begin();
 
@@ -150,7 +175,7 @@ namespace DanceParty
                 string.Format("FPS: {0}\r\nDancers: {1}\r\nAccelerometer: {2}", 
                     _fpsTracker.CurrentFPS, 
                     _dancers.Count, 
-                    _accelerometer.CurrentValue.Acceleration), 
+                    _accelerometer.CurrentReading), 
                 Vector2.One, 
                 Color.Purple);
 

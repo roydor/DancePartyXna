@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using DanceParty.Cameras;
+using DanceParty.Actors.DancerBehaviors;
 
 namespace DanceParty.Actors
 {
@@ -17,7 +18,10 @@ namespace DanceParty.Actors
         /// We know that the models from blender are in a different orientation and scaled 
         /// very small (1 unit = 1 meter, Z is up)
         /// </summary>
-        public static Matrix ModelAdjustment = Matrix.CreateScale(100) * Matrix.CreateRotationX(-MathHelper.PiOver2);
+        public static Matrix ModelAdjustment = 
+            Matrix.CreateScale(100) * 
+            Matrix.CreateRotationX(-MathHelper.PiOver2) * 
+            Matrix.CreateRotationY(MathHelper.Pi);
 
         /// <summary>
         /// The animation controller for this dancer.
@@ -61,23 +65,26 @@ namespace DanceParty.Actors
             }
         }
 
+        private IDancerBehavior _dancerBehavior;
+
         public Dancer(Model model, Texture2D skin)
         {
             _model = model;
             _skin = skin;
             _animationPlayer = new AnimationPlayer((SkinningData)_model.Tag);
 
-            _animationPlayer.StartClip("Dancing");
-
             Position = Vector3.Zero;
             Forward = Vector3.UnitZ;
             Up = Vector3.UnitY;
 
             _worldMatrix = Matrix.CreateWorld(Position, Forward, Up);
+            _dancerBehavior = new IdleDancerBehavior(this);
         }
 
         public void Update(GameTime gameTime)
         {
+            _dancerBehavior.Update(gameTime);
+
             // Update the animation of this dancer.
             _animationPlayer.Update(gameTime.ElapsedGameTime, true, ModelAdjustment);
 
@@ -112,6 +119,21 @@ namespace DanceParty.Actors
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
             }
+        }
+
+        public void SetAnimation(string animationName)
+        {
+            _animationPlayer.StartClip(animationName);
+        }
+
+        public void SetDancerBehavior(IDancerBehavior behavior)
+        {
+            _dancerBehavior = behavior;
+        }
+
+        public bool CollidesWith(Dancer dancer)
+        {
+            return Vector3.DistanceSquared(Position, dancer.Position) < 10000;
         }
     }
 }

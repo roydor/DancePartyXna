@@ -65,10 +65,22 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\CongaLine.cs" />
+    <Compile Include="Actors\DancerBehaviors\FollowingDancerBehavior.cs" />
+    <Compile Include="Actors\DancerBehaviors\IDancerBehavior.cs" />
+    <Compile Include="Actors\DancerBehaviors\IdleDancerBehavior.cs" />
+    <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
+    <Compile Include="Cameras\CameraController.cs" />
+    <Compile Include="Cameras\CameraControllerBehaviors\BehindViewBehavior.cs" />
+    <Compile Include="Cameras\CameraControllerBehaviors\ICameraControllerBehavior.cs" />
     <Compile Include="Cameras\PerspectiveCamera.cs" />
     <Compile Include="Actors\Dancer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Accelerometer\AccelerometerFactory.cs" />
+    <Compile Include="Utilities\Accelerometer\AccelerometerWrapperWindows8.cs" />
+    <Compile Include="Utilities\Accelerometer\AccelerometerWrapperWindowsPhone.cs" />
     <Compile Include="Utilities\FPSTracker.cs" />
+    <Compile Include="Utilities\Accelerometer\IAccelerometerWrapper.cs" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
