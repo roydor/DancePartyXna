@@ -15,7 +15,7 @@ namespace DanceParty.Actors.DancerBehaviors
         private Vector3 _destination;
         private float _currentSpeed;
 
-        public const float WaypointDuration = 0.5f;
+        public const float WaypointDuration = 0.3f;
 
         public FollowingDancerBehavior(Dancer me, Dancer following)
         {

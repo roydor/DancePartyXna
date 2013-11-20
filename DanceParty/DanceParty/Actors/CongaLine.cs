@@ -36,18 +36,27 @@ namespace DanceParty.Actors
             _dancers.Add(leadDancer);
         }
 
+        /// <summary>
+        /// Adds a dancer to this conga line and forces it to follow the person at the end.
+        /// </summary>
         public void AppendDancer(Dancer newDancer)
         {
-            newDancer.SetDancerBehavior(new FollowingDancerBehavior(newDancer, TailDancer));
+            newDancer.SetDancerBehavior(new JoinLineDancerBehavior(newDancer, TailDancer));
             _dancers.Add(newDancer);
         }
 
+        /// <summary>
+        /// Updates all the dancers in this congaline.
+        /// </summary>
         public void Update(GameTime gameTime)
         {
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
         }
 
+        /// <summary>
+        /// Draws this congaline and 
+        /// </summary>
         public void Draw(PerspectiveCamera camera)
         {
             foreach (Dancer dancer in _dancers)

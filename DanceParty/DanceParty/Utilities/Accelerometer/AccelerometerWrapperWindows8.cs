@@ -25,13 +25,14 @@ using Windows.Devices.Sensors;
 
         /// <summary>
         /// Reads in the Accelerometer data for windows8 devices.
-        /// 
         /// </summary>
         private void Windows8AccelerometerChanged(Accelerometer sender, AccelerometerReadingChangedEventArgs args)
         {
-            _currentReading.X = (float)args.Reading.AccelerationX;
-            _currentReading.Y = (float)args.Reading.AccelerationY;
-            _currentReading.Z = (float)args.Reading.AccelerationZ;
+            // For whatever reason, this is insconsistent with windows phone...
+            // so lets swap the reading here.
+            _currentReading.X = -(float)args.Reading.AccelerationY;
+            _currentReading.Y = -(float)args.Reading.AccelerationX;
+            _currentReading.Z = -(float)args.Reading.AccelerationZ;
         }
 
         public bool IsSupported

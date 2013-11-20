@@ -50,7 +50,9 @@ namespace DanceParty
             Content.RootDirectory = "Content";
 
             // Frame rate is 30 fps by default for Windows Phone.
+#if WINDOWS_PHONE
             TargetElapsedTime = TimeSpan.FromTicks(333333);
+#endif
 
             // Extend battery life under lock.
             InactiveSleepTime = TimeSpan.FromSeconds(1);
@@ -77,16 +79,16 @@ namespace DanceParty
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Model manModel = Content.Load<Model>("Models\\human_lowx");
             _segoeUI = Content.Load<SpriteFont>("Fonts\\SegoeUI");
-            Texture2D manSkin = Content.Load<Texture2D>("Textures\\male0");
+
+            DancerFactory.Instance.LoadContent(Content);
 
             for (int i = 0; i < _numRowsCols; i++)
             {
                 for (int j = 0; j < _numRowsCols; j++)
                 {
-                    Dancer newDancer = new Dancer(manModel, manSkin);
+                    Dancer newDancer = DancerFactory.Instance.GetRandomDancer();
+
                     newDancer.Position = new Vector3((i - _numRowsCols / 2) * 100, 0, (j - _numRowsCols / 2) * 100);
 
                     // Randomly update them so they're not in sync.
@@ -94,7 +96,8 @@ namespace DanceParty
                     _dancers.Add(newDancer);
                 }
             }
-            Dancer leader = new Dancer(manModel, manSkin);
+
+            Dancer leader = DancerFactory.Instance.GetRandomDancer();
             leader.SetDancerBehavior(new LeadDancerBehavior(leader));
             _congaLine = new CongaLine(leader);
 
@@ -158,7 +161,7 @@ namespace DanceParty
             ss.AddressU = TextureAddressMode.Clamp;
             ss.AddressV = TextureAddressMode.Clamp;
 
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphics.GraphicsDevice.Clear(Color.DarkCyan);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = ss;

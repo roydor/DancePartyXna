@@ -216,5 +216,12 @@ namespace SkinnedModel
         {
             get { return currentTimeValue; }
         }
+
+        public Dictionary<string, int> BoneIndexMap;
+
+        public Matrix GetWorldTransformForBone(string boneName)
+        {
+            return worldTransforms[skinningDataValue.BoneIndexMap.IndexOf(boneName)];
+        }
     }
 }
