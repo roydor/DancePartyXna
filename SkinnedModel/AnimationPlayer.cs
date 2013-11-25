@@ -106,8 +106,22 @@ namespace SkinnedModel
                 time += currentTimeValue;
 
                 // If we reached the end, loop back to the start.
-                while (time >= currentClipValue.Duration)
-                    time -= currentClipValue.Duration;
+                if (time >= currentClipValue.Duration)
+                {
+                    if (queuedAnimations.Count > 0)
+                    {
+                        AnimationClip nextClip = queuedAnimations.Dequeue();
+                        currentClipValue = nextClip;
+                        currentTimeValue = TimeSpan.Zero;
+                        currentKeyframe = 0;
+                        return;
+                    }
+                    else
+                    {
+                        while (time >= currentClipValue.Duration)
+                            time -= currentClipValue.Duration;
+                    }
+                }
             }
 
             if ((time < TimeSpan.Zero) || (time >= currentClipValue.Duration))
@@ -118,9 +132,6 @@ namespace SkinnedModel
             {
                 currentKeyframe = 0;
                 skinningDataValue.BindPose.CopyTo(boneTransforms, 0);
-
-                if (queuedAnimations.Count > 0)
-                    StartClip(queuedAnimations.Dequeue());
             }
 
             currentTimeValue = time;
