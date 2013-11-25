@@ -7,6 +7,7 @@ using SkinnedModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using DanceParty.Utilities;
 using DanceParty.Cameras;
 using DanceParty.Actors.DancerBehaviors;
 
@@ -18,25 +19,15 @@ namespace DanceParty.Actors
         /// We know that the models from blender are in a different orientation and scaled 
         /// very small (1 unit = 1 meter, Z is up)
         /// </summary>
-        public static Matrix ModelAdjustment = 
-            Matrix.CreateScale(100) * 
-            Matrix.CreateRotationX(-MathHelper.PiOver2) * 
-            Matrix.CreateRotationY(MathHelper.Pi);
+        public static Matrix ModelAdjustment =
+            Matrix.CreateScale(100) *
+            Matrix.CreateRotationZ(-MathHelper.Pi) *
+            Matrix.CreateRotationX(-MathHelper.PiOver2);
 
         /// <summary>
         /// The animation controller for this dancer.
         /// </summary>
-        private AnimationPlayer _animationPlayer;
-
-        /// <summary>
-        /// The model for this dancer.
-        /// </summary>
-        private Model _model;
-
-        /// <summary>
-        /// The skin texture for this model.
-        /// </summary>
-        private Texture2D _skin;
+        public AnimationPlayer _animationPlayer;
 
         /// <summary>
         /// The position of this dancer.
@@ -75,11 +66,12 @@ namespace DanceParty.Actors
         /// </summary>
         private List<Accessory> _accessories;
 
-        public Dancer(Model model, Texture2D skin)
+        private AnimatedModelInstance _modelInstance;
+
+        public Dancer(AnimatedModelInstance modelInstance)
         {
-            _model = model;
-            _skin = skin;
-            _animationPlayer = new AnimationPlayer((SkinningData)_model.Tag);
+            _modelInstance = modelInstance;
+            _animationPlayer = new AnimationPlayer((SkinningData)_modelInstance.OriginalModel.Tag);
 
             _accessories = new List<Accessory>();
 
@@ -89,6 +81,7 @@ namespace DanceParty.Actors
 
             _worldMatrix = Matrix.CreateWorld(Position, Forward, Up);
             _dancerBehavior = new IdleDancerBehavior(this);
+            _modelInstance.SkinTransforms = _animationPlayer.GetSkinTransforms();
         }
 
         public void AddAccessory(Accessory accessory)
@@ -100,11 +93,12 @@ namespace DanceParty.Actors
         {
             _dancerBehavior.Update(gameTime);
 
-            // Update the animation of this dancer.
-            _animationPlayer.Update(gameTime.ElapsedGameTime, true, ModelAdjustment);
-
             // Update the world transform of this dancer.
             Matrix.CreateWorld(ref Position, ref Forward, ref Up, out _worldMatrix);
+
+            // Update the animation of this dancer.
+            _animationPlayer.Update(gameTime.ElapsedGameTime, true, ModelAdjustment * _worldMatrix);
+            _modelInstance.SkinTransforms = _animationPlayer.GetSkinTransforms();
         }
 
         /// <summary>
@@ -112,69 +106,75 @@ namespace DanceParty.Actors
         /// </summary>
         public void Draw(PerspectiveCamera camera)
         {
-            // Get the transformed positions of all the bones.
-            Matrix[] bones = _animationPlayer.GetSkinTransforms();
-            Matrix[] worldBones = _animationPlayer.GetWorldTransforms();
-
-            // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in _model.Meshes)
-            {
-                foreach (SkinnedEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.SetBoneTransforms(bones);
-                    effect.World = _worldMatrix;
-
-                    effect.View = camera.ViewMatrix;
-                    effect.Projection = camera.ProjectionMatrix;
-
-                    effect.Texture = _skin;
-                }
-
-                // Draw the mesh, using the effects set above.
-                mesh.Draw();
-            }
-
-
-            foreach (Accessory accessory in _accessories)
-            {
-                // Accessory may have no model, so nothing to draw.
-                // (Hair?)
-                if (accessory.Model == null)
-                    continue;
-
-                // Which bone is it attached to?
-                Matrix boneTransform = _animationPlayer.GetWorldTransformForBone(accessory.AttachedToBone);
-
-                // Draw the accessory
-                foreach (ModelMesh mesh in accessory.Model.Meshes)
-                {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        effect.EnableDefaultLighting();
-
-                        // Attach it to the correct bone's world transform.
-                        effect.World = boneTransform * _worldMatrix;
-
-                        effect.View = camera.ViewMatrix;
-                        effect.Projection = camera.ProjectionMatrix;
-
-                        effect.TextureEnabled = true;
-                        effect.Texture = accessory.Skin;
-                    }
-
-                    // Draw the mesh, using the effects set above.
-                    mesh.Draw();
-                }
-
-
-            }
         }
+        //    // Get the transformed positions of all the bones.
+        //    Matrix[] bones = _animationPlayer.GetSkinTransforms();
+        //    Matrix[] worldBones = _animationPlayer.GetWorldTransforms();
+
+        //    // Draw the model. A model can have multiple meshes, so loop.
+        //    foreach (ModelMesh mesh in _model.Meshes)
+        //    {
+        //        foreach (SkinnedEffect effect in mesh.Effects)
+        //        {
+        //            effect.EnableDefaultLighting();
+
+        //            effect.SetBoneTransforms(bones);
+        //            effect.World = _worldMatrix;
+
+        //            effect.View = camera.ViewMatrix;
+        //            effect.Projection = camera.ProjectionMatrix;
+
+        //            effect.Texture = _skin;
+        //        }
+
+        //        // Draw the mesh, using the effects set above.
+        //        mesh.Draw();
+        //    }
+
+        //    /*
+        //    foreach (Accessory accessory in _accessories)
+        //    {
+        //        // Accessory may have no model, so nothing to draw.
+        //        // (Hair?)
+        //        if (accessory.Model == null)
+        //            continue;
+
+        //        // Which bone is it attached to?
+        //        Matrix boneTransform = _animationPlayer.GetWorldTransformForBone(accessory.AttachedToBone);
+
+        //        // Draw the accessory
+        //        foreach (ModelMesh mesh in accessory.Model.Meshes)
+        //        {
+        //            foreach (BasicEffect effect in mesh.Effects)
+        //            {
+        //                effect.EnableDefaultLighting();
+
+        //                // Attach it to the correct bone's world transform.
+        //                effect.World = boneTransform * _worldMatrix;
+
+        //                effect.View = camera.ViewMatrix;
+        //                effect.Projection = camera.ProjectionMatrix;
+
+        //                effect.TextureEnabled = true;
+        //                effect.Texture = accessory.Skin;
+        //            }
+
+        //            // Draw the mesh, using the effects set above.
+        //            mesh.Draw();
+        //        }
+            
+
+        //    }*/
+        //}
 
         public void SetAnimation(string animationName)
         {
             _animationPlayer.StartClip(animationName);
+        }
+
+        public void EnqueueAnimation(string animationName)
+        {
+            _animationPlayer.EnqueueAnimation(animationName);
         }
 
         public void SetDancerBehavior(IDancerBehavior behavior)
@@ -185,6 +185,11 @@ namespace DanceParty.Actors
         public bool CollidesWith(Dancer dancer)
         {
             return Vector3.DistanceSquared(Position, dancer.Position) < 10000;
+        }
+
+        public bool IsHostile()
+        {
+            return _dancerBehavior.IsHostile();
         }
     }
 }

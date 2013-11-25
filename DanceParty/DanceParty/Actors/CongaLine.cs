@@ -13,6 +13,9 @@ namespace DanceParty.Actors
     public class CongaLine
     {
         private List<Dancer> _dancers;
+        private bool _stopped;
+        private double _timeSinceStopped;
+        private int _dancersFallen;
 
         public Dancer LeadDancer
         {
@@ -50,6 +53,17 @@ namespace DanceParty.Actors
         /// </summary>
         public void Update(GameTime gameTime)
         {
+            if (_stopped)
+            {
+                _timeSinceStopped += gameTime.ElapsedGameTime.TotalSeconds;
+                if (_dancersFallen < _dancers.Count && _timeSinceStopped >= 0.05f)
+                {
+                    _timeSinceStopped = 0;
+                    Dancer fallingDancer = _dancers[_dancersFallen++];
+                    fallingDancer.SetDancerBehavior(new FallingDancerBehavior(fallingDancer));
+                }
+            }
+
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
         }
@@ -61,6 +75,31 @@ namespace DanceParty.Actors
         {
             foreach (Dancer dancer in _dancers)
                 dancer.Draw(camera);
+        }
+
+        public bool CollidesWithSelf()
+        {
+            // Can't collide with the first 10 people in the line.
+            for (int i = 10; i < _dancers.Count; i++)
+            {
+                if (LeadDancer.CollidesWith(_dancers[i]) && _dancers[i].IsHostile())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void Stop()
+        {
+		    _stopped = true;
+        }
+
+        public int Count
+        {
+            get
+            {
+                return _dancers.Count;
+            }
         }
     }
 }

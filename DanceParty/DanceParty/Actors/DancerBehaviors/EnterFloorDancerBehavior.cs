@@ -7,43 +7,40 @@ using Microsoft.Xna.Framework;
 
 namespace DanceParty.Actors.DancerBehaviors
 {
-    public class FollowingDancerBehavior : IDancerBehavior
+    public class EnterFloorDancerBehavior : IDancerBehavior
     {
-        private Dancer _following;
         private Dancer _me;
-
         private Vector3 _destination;
-        private float _currentSpeed;
+        public static float WalkSpeed = 150f;
 
-        public const float WaypointDuration = 0.3f;
-
-        public FollowingDancerBehavior(Dancer me, Dancer following)
+        public EnterFloorDancerBehavior(Dancer dancer)
         {
-            _me = me;
-            _following = following;
-            SetWaypoint();
-            _me.SetAnimation("Conga");
-        }
+            _me = dancer;
 
-        private void SetWaypoint()
-        {
-            _destination = _following.Position;
+            float angle = Utilities.Utilities.GetRandomFloat() * MathHelper.TwoPi;
+            // TODO: Make this a global constant?
+            float radius = Utilities.Utilities.GetRandomFloat() * 1200f;
+
+            _destination = new Vector3();
+            _destination.X = radius * (float)Math.Sin(angle);
+            _destination.Y = 0;
+            _destination.Z = radius * (float)Math.Cos(angle);
+
             _me.Forward = Vector3.Normalize(_destination - _me.Position);
-            _currentSpeed = Vector3.Distance(_me.Position, _destination) / WaypointDuration;
+            _me.SetAnimation("Walking");
         }
 
         public void Update(GameTime gameTime)
         {
             Vector3 displacement = _destination - _me.Position;
 
-            float stepLength = (float) gameTime.ElapsedGameTime.TotalSeconds * _currentSpeed;
+            float stepLength = (float)gameTime.ElapsedGameTime.TotalSeconds * WalkSpeed;
 
             // Square roots are expensive.
             // If we would pass, or arrive at our destination this step, grab a new waypoint.
             if (stepLength * stepLength >= displacement.LengthSquared())
             {
-                _me.Position = _destination;
-                SetWaypoint();
+                _me.SetDancerBehavior(new IdleDancerBehavior(_me));
                 return;
             }
 
@@ -52,7 +49,7 @@ namespace DanceParty.Actors.DancerBehaviors
 
         public bool IsHostile()
         {
-            return _following.IsHostile();
+            return false;
         }
     }
 }

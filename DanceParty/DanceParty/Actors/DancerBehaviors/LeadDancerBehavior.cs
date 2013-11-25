@@ -22,5 +22,10 @@ namespace DanceParty.Actors.DancerBehaviors
         {
             _dancer.Position = _dancer.Position + _dancer.Forward * LeadDancerWalkSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
+
+        public bool IsHostile()
+        {
+            return true;
+        }
     }
 }

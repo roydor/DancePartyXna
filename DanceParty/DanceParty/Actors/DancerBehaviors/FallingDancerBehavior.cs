@@ -7,11 +7,12 @@ using Microsoft.Xna.Framework;
 
 namespace DanceParty.Actors.DancerBehaviors
 {
-    public class IdleDancerBehavior : IDancerBehavior
+    public class FallingDancerBehavior : IDancerBehavior
     {
-        public IdleDancerBehavior(Dancer dancer)
+        public FallingDancerBehavior(Dancer dancer)
         {
-            dancer.SetAnimation("Dancing");
+            dancer.SetAnimation("Falling");
+            dancer.EnqueueAnimation("Hurting");
         }
 
         public void Update(GameTime gameTime)

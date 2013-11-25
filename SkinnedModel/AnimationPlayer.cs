@@ -24,6 +24,8 @@ namespace SkinnedModel
         #region Fields
 
         // Information about the currently playing animation clip.
+
+        Queue<AnimationClip> queuedAnimations;
         AnimationClip currentClipValue;
         TimeSpan currentTimeValue;
         int currentKeyframe;
@@ -37,7 +39,6 @@ namespace SkinnedModel
         SkinningData skinningDataValue;
         #endregion
 
-
         /// <summary>
         /// Constructs a new animation player.
         /// </summary>
@@ -46,6 +47,7 @@ namespace SkinnedModel
             if (skinningData == null)
                 throw new ArgumentNullException("skinningData");
 
+            queuedAnimations = new Queue<AnimationClip>();
             skinningDataValue = skinningData;
 
             boneTransforms = new Matrix[skinningData.BindPose.Count];
@@ -89,7 +91,6 @@ namespace SkinnedModel
             UpdateSkinTransforms();
         }
 
-
         /// <summary>
         /// Helper used by the Update method to refresh the BoneTransforms data.
         /// </summary>
@@ -117,6 +118,9 @@ namespace SkinnedModel
             {
                 currentKeyframe = 0;
                 skinningDataValue.BindPose.CopyTo(boneTransforms, 0);
+
+                if (queuedAnimations.Count > 0)
+                    StartClip(queuedAnimations.Dequeue());
             }
 
             currentTimeValue = time;
@@ -222,6 +226,11 @@ namespace SkinnedModel
         public Matrix GetWorldTransformForBone(string boneName)
         {
             return worldTransforms[skinningDataValue.BoneIndexMap.IndexOf(boneName)];
+        }
+
+        public void EnqueueAnimation(string clipName)
+        {
+            queuedAnimations.Enqueue(skinningDataValue.AnimationClips[clipName]);
         }
     }
 }

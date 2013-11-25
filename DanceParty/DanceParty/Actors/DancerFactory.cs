@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using DanceParty.Utilities;
+using DanceParty.Cameras;
+
 namespace DanceParty.Actors
 {
     public class DancerFactory
@@ -19,6 +22,8 @@ namespace DanceParty.Actors
                 return _instance ?? (_instance = new DancerFactory());
             }
         }
+
+        private List<BatchRenderedAnimatedModel> _batchedModels;
 
         private Model _maleModel;
         private Model _femaleModel;
@@ -41,7 +46,7 @@ namespace DanceParty.Actors
             _hairSkins = new List<Texture2D>();
         }
 
-        public void LoadContent(ContentManager contentManager)
+        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _maleModel = contentManager.Load<Model>("Models\\male_low");
             _femaleModel = contentManager.Load<Model>("Models\\human_low_female");
@@ -62,40 +67,40 @@ namespace DanceParty.Actors
             
             // Load all female skins.
             _femaleSkins.Add(contentManager.Load<Texture2D>("Textures\\female1"));
+
+
+            _batchedModels = new List<BatchRenderedAnimatedModel>();
+
+            _batchedModels.Add(new BatchRenderedAnimatedModel(graphicsDevice, _maleModel, _maleSkins[0]));
+            _batchedModels.Add(new BatchRenderedAnimatedModel(graphicsDevice, _femaleModel, _femaleSkins[0]));
         }
 
         private Random _random = new Random();
         public Dancer GetRandomDancer()
         {
-            Model model;
-            Texture2D skin;
+            BatchRenderedAnimatedModel batchedModel;
+
             Accessory hair;
 
-            if (_random.Next(2) == 1)
-            {
-                model = _maleModel;
-                skin = _maleSkins[_random.Next(_maleSkins.Count)];
-                hair = new Accessory() { 
-                    AttachedToBone = "Head", 
-                    Model = _maleHairTypes[_random.Next(_maleHairTypes.Count)],
-                    Skin = _hairSkins[_random.Next(_hairSkins.Count)]
-                };
-            }
-            else
-            {
-                model = _femaleModel;
-                skin = _femaleSkins[_random.Next(_femaleSkins.Count)];
-                hair = new Accessory() { 
-                    AttachedToBone = "Head", 
-                    Model = _femaleHairTypes[_random.Next(_femaleHairTypes.Count)], 
-                    Skin = _hairSkins[_random.Next(_hairSkins.Count)] 
-                };
-            }
-
+            batchedModel = _batchedModels[_random.Next(_batchedModels.Count)];
             // Add a random hair bound to the head.
-            Dancer d =  new Dancer(model, skin);
-            d.AddAccessory(hair);
+
+            Dancer d = new Dancer(batchedModel.GetInstance());
+        //    d.AddAccessory(hair);
             return d;
+        }
+
+        public void ClearInstances()
+        {
+            foreach (BatchRenderedAnimatedModel model in _batchedModels)
+                model.ClearInstances();
+        }
+
+        // TODO: I dont like this being here...
+        public void DrawInstances(PerspectiveCamera camera)
+        {
+            foreach (BatchRenderedAnimatedModel model in _batchedModels)
+                model.DrawInstances(camera);
         }
     }
 
@@ -118,5 +123,16 @@ namespace DanceParty.Actors
         /// The skin of that model
         /// </summary>
         public Texture2D Skin;
+
+        /// <summary>
+        /// The transform for this Matrix.
+        /// </summary>
+        public Matrix Transform;
+    }
+
+    public enum AccessoryType
+    {
+        LongBlackHair,
+        LongBrownHair,
     }
 }

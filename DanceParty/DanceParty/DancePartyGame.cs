@@ -30,22 +30,20 @@ namespace DanceParty
         SpriteBatch spriteBatch;
 
         private CongaLine _congaLine;
+        private DancerEmitter _dancerEmitter;
 
         private List<Dancer> _dancers;
         private FPSTracker _fpsTracker;
         private CameraController _cameraController;
         private IAccelerometerWrapper _accelerometer;
 
-        private int _numRowsCols = 16;
+        public static int DrawsPerFrame = 0;
 
         private SpriteFont _segoeUI;
-        private Random r = new Random();
 
         public DancePartyGame()
         {
             graphics = new GraphicsDeviceManager(this);
- //           graphics.PreferredBackBufferWidth = 420;
-//            graphics.PreferredBackBufferHeight = 240;
 
             Content.RootDirectory = "Content";
 
@@ -58,6 +56,7 @@ namespace DanceParty
             InactiveSleepTime = TimeSpan.FromSeconds(1);
 
             _dancers = new List<Dancer>();
+            _dancerEmitter = new DancerEmitter();
             _fpsTracker = new FPSTracker();
             _accelerometer = AccelerometerFactory.GetAccelerometer();
         }
@@ -81,21 +80,7 @@ namespace DanceParty
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _segoeUI = Content.Load<SpriteFont>("Fonts\\SegoeUI");
 
-            DancerFactory.Instance.LoadContent(Content);
-
-            for (int i = 0; i < _numRowsCols; i++)
-            {
-                for (int j = 0; j < _numRowsCols; j++)
-                {
-                    Dancer newDancer = DancerFactory.Instance.GetRandomDancer();
-
-                    newDancer.Position = new Vector3((i - _numRowsCols / 2) * 100, 0, (j - _numRowsCols / 2) * 100);
-
-                    // Randomly update them so they're not in sync.
-                    newDancer.Update(new GameTime(new TimeSpan(), new TimeSpan(0, 0, 0, r.Next(2), r.Next(2000))));
-                    _dancers.Add(newDancer);
-                }
-            }
+            DancerFactory.Instance.LoadContent(Content, GraphicsDevice);
 
             Dancer leader = DancerFactory.Instance.GetRandomDancer();
             leader.SetDancerBehavior(new LeadDancerBehavior(leader));
@@ -107,7 +92,6 @@ namespace DanceParty
             _cameraController.SetCameraBehavior(new BehindViewBehavior(camera, _congaLine.LeadDancer));
 
             _accelerometer.Start();
-            
             GC.Collect();
         }
 
@@ -128,12 +112,12 @@ namespace DanceParty
                 Vector3.Transform(
                     _congaLine.LeadDancer.Forward, 
                     Matrix.CreateRotationY(
-                        _accelerometer.CurrentReading.Y * 
+                        2 * _accelerometer.CurrentReading.Y * 
                         (float)gameTime.ElapsedGameTime.TotalSeconds));
-            
+
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
-
+             
             _congaLine.Update(gameTime);
 
             for (int i = 0; i < _dancers.Count; i++)
@@ -145,6 +129,16 @@ namespace DanceParty
                 }
             }
 
+            if (_dancers.Count < 15)
+                _dancers.Add(_dancerEmitter.EmitDancer());
+
+
+            if (_congaLine.CollidesWithSelf())
+                GameOver();
+
+            if (_congaLine.LeadDancer.Position.Length() > 1500f)
+                GameOver();
+
             _cameraController.Update(gameTime);
 
             // Allows the game to exit
@@ -153,6 +147,15 @@ namespace DanceParty
                 this.Exit();
             
             base.Update(gameTime);
+        }
+
+        public void GameOver()
+        {
+            _congaLine.Stop();
+        }
+
+        public void Reset()
+        {
         }
 
         protected override void Draw(GameTime gameTime)
@@ -166,27 +169,61 @@ namespace DanceParty
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = ss;
 
-            foreach (Dancer dancer in _dancers)
-                dancer.Draw(_cameraController.Camera);
+            DancerFactory.Instance.DrawInstances(_cameraController.Camera);
 
-            _congaLine.Draw(_cameraController.Camera);
+            // Dont draw the dance floor this way later...
+            // It should be the model for the room
+            DrawDanceFloor(_cameraController.Camera);
 
             spriteBatch.Begin();
 
             spriteBatch.DrawString(
                 _segoeUI, 
-                string.Format("FPS: {0}\r\nDancers: {1}\r\nAccelerometer: {2}", 
+                string.Format("FPS: {0}\r\nCollected Dancers: {1}\r\nAccelerometer: {2}\r\nDraws Per Frame: {3}", 
                     _fpsTracker.CurrentFPS, 
-                    _dancers.Count, 
-                    _accelerometer.CurrentReading), 
+                    _congaLine.Count, 
+                    _accelerometer.CurrentReading,
+                    DrawsPerFrame), 
                 Vector2.One, 
                 Color.Purple);
 
+            DrawsPerFrame = 0;
             spriteBatch.End();
 
             _fpsTracker.Update(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        private void DrawDanceFloor(PerspectiveCamera camera)
+        {
+            VertexPositionColor[] userPrimitives;
+            BasicEffect basicEffect;
+
+
+            //Create the vertices for traingle
+            userPrimitives = new VertexPositionColor[31];
+
+            for (int i = 0; i < 31; i++)
+            {
+                float angle = MathHelper.TwoPi * (i / 30.0f);
+                userPrimitives[i] = new VertexPositionColor();
+                userPrimitives[i].Position = new Vector3(1500 * (float)Math.Sin(angle), 1, 1500 * (float)Math.Cos(angle));
+                userPrimitives[i].Color = Color.Red;
+            }
+
+           //Create new basic effect and properties
+            basicEffect = new BasicEffect(GraphicsDevice);
+            basicEffect.World = Matrix.Identity;
+            basicEffect.View = camera.ViewMatrix;
+            basicEffect.Projection = camera.ProjectionMatrix;
+            basicEffect.VertexColorEnabled = true;
+
+            //Start using the BasicEffect
+            basicEffect.CurrentTechnique.Passes[0].Apply();
+            //Draw the primitives
+            GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, userPrimitives, 0, 30);
+
         }
     }
 }

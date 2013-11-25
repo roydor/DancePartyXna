@@ -66,11 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\CongaLine.cs" />
+    <Compile Include="Actors\DancerBehaviors\EnterFloorDancerBehavior.cs" />
+    <Compile Include="Actors\DancerBehaviors\FallingDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\JoinLineDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\FollowingDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\IDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\IdleDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
+    <Compile Include="Actors\DancerEmitter.cs" />
     <Compile Include="Actors\DancerFactory.cs" />
     <Compile Include="Cameras\CameraController.cs" />
     <Compile Include="Cameras\CameraControllerBehaviors\BehindViewBehavior.cs" />
@@ -81,8 +84,11 @@
     <Compile Include="Utilities\Accelerometer\AccelerometerFactory.cs" />
     <Compile Include="Utilities\Accelerometer\AccelerometerWrapperWindows8.cs" />
     <Compile Include="Utilities\Accelerometer\AccelerometerWrapperWindowsPhone.cs" />
+    <Compile Include="Utilities\AnimatedInstancedModel.cs" />
     <Compile Include="Utilities\FPSTracker.cs" />
     <Compile Include="Utilities\Accelerometer\IAccelerometerWrapper.cs" />
+    <Compile Include="Utilities\InstancedModel.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>

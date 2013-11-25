@@ -38,5 +38,10 @@ namespace DanceParty.Actors.DancerBehaviors
 
             _me.Position += _me.Forward * stepLength;
         }
+
+        public bool IsHostile()
+        {
+            return false;
+        }
     }
 }
