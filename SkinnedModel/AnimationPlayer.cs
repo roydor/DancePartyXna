@@ -154,7 +154,6 @@ namespace SkinnedModel
             }
         }
 
-
         /// <summary>
         /// Helper used by the Update method to refresh the WorldTransforms data.
         /// </summary>
