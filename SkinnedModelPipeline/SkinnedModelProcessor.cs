@@ -29,6 +29,7 @@ namespace SkinnedModelPipeline
     [ContentProcessor]
     public class SkinnedModelProcessor : ModelProcessor
     {
+        public const double SecondsPerFrame = 1.0 / 24;
         /// <summary>
         /// The main Process method converts an intermediate format content pipeline
         /// NodeContent tree to a ModelContent object with embedded animation data.
@@ -110,9 +111,18 @@ namespace SkinnedModelPipeline
 
             foreach (KeyValuePair<string, AnimationContent> animation in animations)
             {
+                string[] animationProps = animation.Key.Split('_');
+
+                if (animationProps.Length != 2)
+                    throw new InvalidContentException(string.Format("[AnimationName: {0}]\r\nYou need to specify animatons like: AnimationName;Frames\r\nAlso make sure your first animation has enough frames to cover the maximum animation length due to an XNA bug.", animation.Key));
+
+                string name = animationProps[0];
+                int frames = int.Parse(animationProps[1]) - 1;
+
+                animation.Value.Duration = TimeSpan.FromSeconds(frames * SecondsPerFrame);
                 AnimationClip processed = ProcessAnimation(animation.Value, boneMap);
 
-                animationClips.Add(animation.Key, processed);
+                animationClips.Add(name, processed);
             }
 
             if (animationClips.Count == 0)
@@ -151,8 +161,12 @@ namespace SkinnedModelPipeline
                 // Convert the keyframe data.
                 foreach (AnimationKeyframe keyframe in channel.Value)
                 {
-                    keyframes.Add(new Keyframe(boneIndex, keyframe.Time,
+                    // Dont add animations beyond the length of this animation.
+                    if (keyframe.Time <= animation.Duration)
+                    {
+                        keyframes.Add(new Keyframe(boneIndex, keyframe.Time,
                                                keyframe.Transform));
+                    }
                 }
             }
 

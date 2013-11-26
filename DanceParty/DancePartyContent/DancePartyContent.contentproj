@@ -51,13 +51,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\human_low_female.fbx">
-      <Name>human_low_female</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\female1.png">
       <Name>female1</Name>
       <Importer>TextureImporter</Importer>
@@ -98,6 +91,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\female_low.fbx">
+      <Name>female_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
     <Compile Include="Models\male_low.fbx">
       <Name>male_low</Name>
       <Importer>FbxImporter</Importer>

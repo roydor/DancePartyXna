@@ -101,5 +101,13 @@ namespace DanceParty.Actors
                 return _dancers.Count;
             }
         }
+
+        public bool HasStopped
+        {
+            get
+            {
+                return _stopped;
+            }
+        }
     }
 }

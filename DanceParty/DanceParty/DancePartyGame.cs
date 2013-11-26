@@ -145,6 +145,17 @@ namespace DanceParty
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
                 ButtonState.Pressed)
                 this.Exit();
+
+            // Process touch events
+            TouchCollection touchCollection = TouchPanel.GetState();
+            foreach (TouchLocation tl in touchCollection)
+            {
+                if (_congaLine.HasStopped && ((tl.State == TouchLocationState.Pressed) || (tl.State == TouchLocationState.Moved)))
+                {
+                    Reset();
+                }
+            }
+
             
             base.Update(gameTime);
         }
@@ -156,6 +167,11 @@ namespace DanceParty
 
         public void Reset()
         {
+            DancerFactory.Instance.ClearInstances();
+            _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
+            _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
+            _cameraController.SetCameraBehavior(new BehindViewBehavior(_cameraController.Camera, _congaLine.LeadDancer));
+            _dancers.Clear();
         }
 
         protected override void Draw(GameTime gameTime)

@@ -49,7 +49,7 @@ namespace DanceParty.Actors
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _maleModel = contentManager.Load<Model>("Models\\male_low");
-            _femaleModel = contentManager.Load<Model>("Models\\human_low_female");
+            _femaleModel = contentManager.Load<Model>("Models\\female_low");
 
             // Load hair types
             _maleHairTypes.Add(null);
