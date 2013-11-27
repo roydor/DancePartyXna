@@ -80,7 +80,7 @@ namespace DanceParty
             spriteBatch = new SpriteBatch(GraphicsDevice);
             _segoeUI = Content.Load<SpriteFont>("Fonts\\SegoeUI");
 
-            DancerFactory.Instance.LoadContent(Content, GraphicsDevice);
+            BatchedModelManager.Instance.LoadContent(Content, GraphicsDevice);
 
             Dancer leader = DancerFactory.Instance.GetRandomDancer();
             leader.SetDancerBehavior(new LeadDancerBehavior(leader));
@@ -167,7 +167,7 @@ namespace DanceParty
 
         public void Reset()
         {
-            DancerFactory.Instance.ClearInstances();
+            BatchedModelManager.Instance.ClearInstances();
             _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
             _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
             _cameraController.SetCameraBehavior(new BehindViewBehavior(_cameraController.Camera, _congaLine.LeadDancer));
@@ -185,7 +185,7 @@ namespace DanceParty
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = ss;
 
-            DancerFactory.Instance.DrawInstances(_cameraController.Camera);
+            BatchedModelManager.Instance.DrawInstances(_cameraController.Camera);
 
             // Dont draw the dance floor this way later...
             // It should be the model for the room

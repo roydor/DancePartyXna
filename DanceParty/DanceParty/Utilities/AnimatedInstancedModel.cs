@@ -70,33 +70,20 @@ namespace DanceParty.Utilities
         /// </summary>
         private SkinnedEffect _skinnedEffect;
 
-        /// <summary>
-        /// A list of all the active instances of this model to render.
-        /// </summary>
-        private List<AnimatedModelInstance> _activeInstances;
-
-        /// <summary>
-        /// The skin to be used for this model.
-        /// </summary>
-        private Texture2D _skin;
-
-        public BatchRenderedAnimatedModel(GraphicsDevice graphics, Model model, Texture2D skin)
+        public BatchRenderedAnimatedModel(GraphicsDevice graphics, Model model)
         {
             _graphicsDevice = graphics;
             _originalModel = model;
             _originalBoneCount = model.Bones.Count;
 
             _skinnedEffect = (SkinnedEffect) model.Meshes[0].Effects[0];
-            _skin = skin;
 
             SetupInstancedVertexData();
-            _activeInstances = new List<AnimatedModelInstance>();
         }
 
         public AnimatedModelInstance GetInstance()
         {
             AnimatedModelInstance newInstance = new AnimatedModelInstance(_originalModel);
-            _activeInstances.Add(newInstance);
             return newInstance;
         }
 
@@ -241,22 +228,22 @@ namespace DanceParty.Utilities
         /// Draws all the instances of this model.
         /// </summary>
         /// <param name="camera"></param>
-        public void DrawInstances(PerspectiveCamera camera)
+        public void DrawInstances(PerspectiveCamera camera, List<AnimatedModelInstance> activeInstances, Texture2D texture)
         {
-            int numberOfInstances = _activeInstances.Count;
+            int numberOfInstances = activeInstances.Count;
             Matrix[] transforms = new Matrix[numberOfInstances];
             Matrix[][] boneTransforms = new Matrix[numberOfInstances][];
 
-            for (int i = 0; i < _activeInstances.Count; i++)
+            for (int i = 0; i < activeInstances.Count; i++)
             {
-                AnimatedModelInstance modelInstance = _activeInstances[i];
+                AnimatedModelInstance modelInstance = activeInstances[i];
                 Utilities.CopyMatrix(ref modelInstance.Transform, ref transforms[i]);
                 boneTransforms[i] = new Matrix[modelInstance.SkinTransforms.Length];
 
                 for(int bone = 0; bone < modelInstance.SkinTransforms.Length; bone++)
                     Utilities.CopyMatrix(ref modelInstance.SkinTransforms[bone], ref boneTransforms[i][bone]);
             }
-            Draw(transforms, boneTransforms, numberOfInstances, camera, _skin);
+            Draw(transforms, boneTransforms, numberOfInstances, camera, texture);
         }
 
         /// <summary>
@@ -314,14 +301,6 @@ namespace DanceParty.Utilities
                     DancePartyGame.DrawsPerFrame++;
                 }
             }
-        }
-
-        /// <summary>
-        /// Clear all the instances
-        /// </summary>
-        public void ClearInstances()
-        {
-            _activeInstances.Clear();
         }
     }
 }

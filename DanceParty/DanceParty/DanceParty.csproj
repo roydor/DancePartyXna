@@ -75,6 +75,7 @@
     <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
     <Compile Include="Actors\DancerEmitter.cs" />
     <Compile Include="Actors\DancerFactory.cs" />
+    <Compile Include="BatchedModelManager.cs" />
     <Compile Include="Cameras\CameraController.cs" />
     <Compile Include="Cameras\CameraControllerBehaviors\BehindViewBehavior.cs" />
     <Compile Include="Cameras\CameraControllerBehaviors\ICameraControllerBehavior.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Utilities\FPSTracker.cs" />
     <Compile Include="Utilities\Accelerometer\IAccelerometerWrapper.cs" />
     <Compile Include="Utilities\InstancedModel.cs" />
+    <Compile Include="Utilities\RandomHelper.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>

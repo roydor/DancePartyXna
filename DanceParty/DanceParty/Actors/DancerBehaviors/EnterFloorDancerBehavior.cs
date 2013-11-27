@@ -5,6 +5,8 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
+using DanceParty.Utilities;
+
 namespace DanceParty.Actors.DancerBehaviors
 {
     public class EnterFloorDancerBehavior : IDancerBehavior
@@ -17,9 +19,9 @@ namespace DanceParty.Actors.DancerBehaviors
         {
             _me = dancer;
 
-            float angle = Utilities.Utilities.GetRandomFloat() * MathHelper.TwoPi;
+            float angle = RandomHelper.GetRandomFloat() * MathHelper.TwoPi;
             // TODO: Make this a global constant?
-            float radius = Utilities.Utilities.GetRandomFloat() * 1200f;
+            float radius = RandomHelper.GetRandomFloat() * 1200f;
 
             _destination = new Vector3();
             _destination.X = radius * (float)Math.Sin(angle);

@@ -10,12 +10,6 @@ namespace DanceParty.Utilities
 {
     public static class Utilities
     {
-        private static Random _random = new Random();
-        public static float GetRandomFloat()
-        {
-            return (float)_random.NextDouble();
-        }
-
         // Copy a matrix to avoid the garbage collecting of array copy.
         public static void CopyMatrix(ref Matrix src, ref Matrix dest)
         {
