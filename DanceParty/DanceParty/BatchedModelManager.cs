@@ -56,37 +56,17 @@ namespace DanceParty
             }
         }
 
-        private List<Model> _maleHairTypes;
-        private List<Model> _femaleHairTypes;
-
-        private List<Texture2D> _hairSkins;
-
         List<BatchedAnimatedModelContainer> _batchedAnimatedModelContainers;
         List<BatchedModelContainer> _batchedModelContainers;
 
         private BatchedModelManager()
         {
-            _maleHairTypes = new List<Model>();
-            _femaleHairTypes = new List<Model>();
-            _hairSkins = new List<Texture2D>();
-
             _batchedAnimatedModelContainers = new List<BatchedAnimatedModelContainer>();
             _batchedModelContainers = new List<BatchedModelContainer>();
         }
 
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {   
-            // Load hair types
-            _maleHairTypes.Add(null);
-            _maleHairTypes.Add(contentManager.Load<Model>("Models\\mohawk"));
-
-            _femaleHairTypes.Add(contentManager.Load<Model>("Models\\longhair1"));
-
-            // Load hair skins
-            _hairSkins.Add(contentManager.Load<Texture2D>("Textures\\black"));
-            _hairSkins.Add(contentManager.Load<Texture2D>("Textures\\brown"));
-            _hairSkins.Add(contentManager.Load<Texture2D>("Textures\\blonde"));
-
             // Create the animated models and process them.
             BatchRenderedAnimatedModel animatedMaleModel = 
                 new BatchRenderedAnimatedModel(
@@ -98,8 +78,7 @@ namespace DanceParty
                     graphicsDevice, 
                     contentManager.Load<Model>("Models\\female_low"));
 
-
-            // Create instance containers to group skins with  the models.
+            // Create instance containers to group skins with the models.
             BatchedAnimatedModelContainer maleContainer = 
                 new BatchedAnimatedModelContainer(
                     animatedMaleModel,

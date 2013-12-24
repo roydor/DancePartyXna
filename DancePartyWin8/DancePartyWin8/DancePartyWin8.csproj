@@ -138,6 +138,7 @@
     <Compile Include="..\..\DanceParty\DanceParty\Cameras\*.*" />
     <Compile Include="..\..\DanceParty\DanceParty\Utilities\*.*" />
     <Compile Include="..\..\DanceParty\DanceParty\Utilities\*\*.*" />
+    <Compile Include="..\..\DanceParty\DanceParty\GameStates\*.*" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -146,6 +147,18 @@
     <Content Include="Content\*\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Content\Textures\LoadingMessage.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\PlayButton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\QuitButton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Textures\RetryButton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="DancePartyWin8_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
