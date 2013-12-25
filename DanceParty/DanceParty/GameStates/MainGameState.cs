@@ -37,7 +37,7 @@ namespace DanceParty.GameStates
         private bool _isLoaded = false;
 
         private static MainGameState _instance;
-        public static IGameState Instance
+        public static MainGameState Instance
         {
             get { return _instance ?? 
                 (_instance = new MainGameState(
@@ -86,6 +86,7 @@ namespace DanceParty.GameStates
                 GameStateManager.Instance.EnqueueGameState(LoadingStateFactory.GetLoadingState(LoadContent));
                 return;
             }
+
             _congaLine.LeadDancer.Forward =
                 Vector3.Transform(
                     _congaLine.LeadDancer.Forward,
@@ -123,19 +124,13 @@ namespace DanceParty.GameStates
 
             _cameraController.Update(gameTime);
 
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back ==
-                ButtonState.Pressed)
-                DancePartyGame.Instance.Exit();
 
             // Process touch events
             TouchCollection touchCollection = TouchPanel.GetState();
             foreach (TouchLocation tl in touchCollection)
             {
-                if (_congaLine.HasStopped && ((tl.State == TouchLocationState.Pressed) || (tl.State == TouchLocationState.Moved)))
-                {
-                    Reset();
-                }
+                if (tl.State == TouchLocationState.Pressed && _congaLine.HasStopped)
+                    GameStateManager.Instance.PopGameState();
             }
         }
 
@@ -148,6 +143,9 @@ namespace DanceParty.GameStates
         // Reset the game.
         public void Reset()
         {
+            if (!_isLoaded)
+                return;
+
             BatchedModelManager.Instance.ClearInstances();
             _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
             _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
@@ -157,6 +155,9 @@ namespace DanceParty.GameStates
 
         public void Draw(GameTime gameTime)
         {
+            if (!_isLoaded)
+                return;
+
             SamplerState ss = new SamplerState();
             ss.AddressU = TextureAddressMode.Clamp;
             ss.AddressV = TextureAddressMode.Clamp;

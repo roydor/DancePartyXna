@@ -52,6 +52,7 @@ namespace DanceParty
             _instance = this;
             graphics = new GraphicsDeviceManager(this);
             _gameStateManager = GameStateManager.Instance;
+            _fpsTracker = new FPSTracker();
 
             Content.RootDirectory = "Content";
 
@@ -72,8 +73,6 @@ namespace DanceParty
         /// </summary>
         protected override void Initialize()
         {
-            _gameStateManager.EnqueueGameState(MainGameState.Instance);
-
             base.Initialize();
         }
 
@@ -81,7 +80,9 @@ namespace DanceParty
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            _segoeUI = Content.Load<SpriteFont>("Fonts\\SegoeUI");
+            FontManager.Instance.LoadContent();
+
+            _gameStateManager.EnqueueGameState(MainMenuState.Instance);
         }
 
         /// <summary>
@@ -102,7 +103,12 @@ namespace DanceParty
 
         protected override void Draw(GameTime gameTime)
         {
-            _gameStateManager.GetCurrentState().Draw(gameTime);
+           _gameStateManager.GetCurrentState().Draw(gameTime);
+           _fpsTracker.Update(gameTime);
+
+           SpriteBatch.Begin();
+           SpriteBatch.DrawString(FontManager.Instance.BangersSmall, "FPS: " + _fpsTracker.CurrentFPS, Vector2.Zero, Color.White);
+           SpriteBatch.End();
             base.Draw(gameTime);
         }
     }

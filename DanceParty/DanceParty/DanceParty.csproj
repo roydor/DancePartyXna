@@ -81,6 +81,7 @@
     <Compile Include="Cameras\CameraControllerBehaviors\ICameraControllerBehavior.cs" />
     <Compile Include="Cameras\PerspectiveCamera.cs" />
     <Compile Include="Actors\Dancer.cs" />
+    <Compile Include="FontManager.cs" />
     <Compile Include="GameStates\GameStateActions.cs" />
     <Compile Include="GameStates\GameStateManager.cs" />
     <Compile Include="GameStates\IGameState.cs" />

@@ -22,7 +22,10 @@ namespace DanceParty.GameStates
     {
         public static LoadingState GetLoadingState(LoadContentFunction loadFunction)
         {
-            return new LoadingState(loadFunction, DancePartyGame.Instance.GraphicsDevice, DancePartyGame.Instance.SpriteBatch);
+            return new LoadingState(loadFunction,
+                DancePartyGame.Instance.GraphicsDevice, 
+                DancePartyGame.Instance.SpriteBatch,
+                FontManager.Instance.BangersLarge);
         }
     }
 
@@ -34,17 +37,40 @@ namespace DanceParty.GameStates
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _loadingTexture;
+        private string[] _loadingTips = new string[] {
+            "Make sure you don't bump into the conga line!", 
+            "Add people to your line by bumping into them!"
+        };
 
-        public LoadingState(LoadContentFunction loadFunction, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        private const string _loadingTextBase = "Loading";
+        private const string _dot = ".";
+
+        private string _animatedMessage;
+        private int _numberOfDots = 0;
+        private int _maxDots = 3;
+
+        private Vector2 _loadingMessageDimensions;
+        private Vector2 _loadingMessagePosition;
+
+        //Time between animating dots in seconds.
+        private float _loadingTickLength = 0.5f;
+        private float _timeSinceTick = 0;
+
+        public LoadingState(LoadContentFunction loadFunction, 
+            GraphicsDevice graphicsDevice, 
+            SpriteBatch spriteBatch, 
+            SpriteFont UIFont)
         {
             _graphicsDevice = graphicsDevice;
             _spriteBatch = spriteBatch;
 
             _loadingComplete = false;
             _loadFunction = loadFunction;
+            _animatedMessage = _loadingTextBase;
+            
+            _loadingMessageDimensions = new Vector2();
+            _loadingMessagePosition = new Vector2();
 
-            _loadingTexture = DancePartyGame.Instance.Content.Load<Texture2D>("Textures\\LoadingMessage");
             ThreadHelper.RunAsync(LoadContentMain);
         }
 
@@ -62,7 +88,28 @@ namespace DanceParty.GameStates
         {
             if (!_loadingComplete)
             {
+                _timeSinceTick += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
+                if (_timeSinceTick >= _loadingTickLength)
+                {
+                    _timeSinceTick -= _loadingTickLength;
+                    _numberOfDots++;
+
+                    if (_numberOfDots > _maxDots)
+                    {
+                        _animatedMessage = _loadingTextBase;
+                        _numberOfDots = 0;
+                    }
+                    else
+                    {
+                        _animatedMessage = _dot + _animatedMessage + _dot;
+                    }
+                }
+                
+                _loadingMessageDimensions.X = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).X;
+                _loadingMessageDimensions.Y = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).Y;
+                _loadingMessagePosition.X = (_graphicsDevice.Viewport.Width - _loadingMessageDimensions.X) / 2;
+                _loadingMessagePosition.Y = (_graphicsDevice.Viewport.Height - _loadingMessageDimensions.Y) / 2;
             }
             else
             {
@@ -75,7 +122,7 @@ namespace DanceParty.GameStates
         {
             _graphicsDevice.Clear(Color.DarkSlateBlue);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_loadingTexture, Vector2.Zero, Color.Wheat);
+            _spriteBatch.DrawString(FontManager.Instance.BangersLarge, _animatedMessage, _loadingMessagePosition, Color.Yellow);
             _spriteBatch.End();
         }
 
