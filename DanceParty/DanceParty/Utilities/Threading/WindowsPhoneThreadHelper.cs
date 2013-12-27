@@ -7,7 +7,7 @@ using FunctionCallback = DanceParty.Utilities.Threading.ThreadHelper.FunctionCal
 
 namespace DanceParty.Utilities.Threading
 {
-    #if WINDOWS_PHONE
+    #if WINDOWS_PHONE || WINDOWS_DESKTOP
     using System.Threading;
     public class WindowsPhoneThreadHelper
     {

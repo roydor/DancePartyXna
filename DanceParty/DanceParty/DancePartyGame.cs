@@ -50,6 +50,7 @@ namespace DanceParty
         public DancePartyGame()
         {
             _instance = this;
+            this.IsMouseVisible = true;
             graphics = new GraphicsDeviceManager(this);
             _gameStateManager = GameStateManager.Instance;
             _fpsTracker = new FPSTracker();
@@ -83,6 +84,12 @@ namespace DanceParty
             FontManager.Instance.LoadContent();
 
             _gameStateManager.EnqueueGameState(MainMenuState.Instance);
+            _gameStateManager.EnqueueGameState(LoadingStateFactory.GetLoadingState(LoadAudio));
+        }
+
+        public void LoadAudio()
+        {
+            SoundManager.Instance.LoadAudio();
         }
 
         /// <summary>
@@ -96,6 +103,8 @@ namespace DanceParty
         
         protected override void Update(GameTime gameTime)
         {
+            PointerInputManager.Instance.Update();
+
             _gameStateManager.ProcessStateActions();
             _gameStateManager.GetCurrentState().Update(gameTime);
             base.Update(gameTime);

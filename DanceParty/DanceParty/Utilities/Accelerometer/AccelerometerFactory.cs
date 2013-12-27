@@ -14,6 +14,9 @@ namespace DanceParty.Utilities.Accelerometer
 #elif WINDOWS_PHONE
             return new AccelerometerWrapperWindowsPhone();
 #endif
+#if WINDOWS_DESKTOP
+            return new NoAccelerometer();
+#endif
         }
     }
 }

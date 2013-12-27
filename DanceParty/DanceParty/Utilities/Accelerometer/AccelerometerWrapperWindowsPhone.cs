@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace DanceParty.Utilities.Accelerometer
 {
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE 
 using Microsoft.Devices.Sensors;
 using Accelerometer = Microsoft.Devices.Sensors.Accelerometer;
 

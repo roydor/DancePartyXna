@@ -15,7 +15,7 @@ namespace DanceParty.Utilities.Threading
             return;
 #endif
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || WINDOWS_DESKTOP
             WindowsPhoneThreadHelper.RunAsync(functionToCall);
             return;
 #endif

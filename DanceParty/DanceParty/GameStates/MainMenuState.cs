@@ -53,8 +53,11 @@ namespace DanceParty.GameStates
 
         private static void OnPlayClick()
         {
-            GameStateManager.Instance.EnqueueGameState(MainGameState.Instance);
-            MainGameState.Instance.Reset();
+            GameStateManager.Instance.EnqueueGameState(
+                new MainGameState(
+                    DancePartyGame.Instance.GraphicsDevice,
+                    DancePartyGame.Instance.SpriteBatch,
+                    DancePartyGame.Instance.Content));
         }
 
         private static void OnQuitClick()
@@ -82,12 +85,12 @@ namespace DanceParty.GameStates
 
         public void Update(GameTime gameTime)
         {
-            TouchCollection touchCollection = TouchPanel.GetState();
-            foreach (TouchLocation tl in touchCollection)
+            Vector2? clickedPosition = PointerInputManager.Instance.GetClickedPosition();
+            if (clickedPosition.HasValue)
             {
                 foreach (UIButton button in _buttons)
                 {
-                    if (tl.State == TouchLocationState.Pressed && button.ContainsPoint(tl.Position))
+                    if (button.ContainsPoint(clickedPosition.Value))
                     {
                         button.OnActivate();
                         return;

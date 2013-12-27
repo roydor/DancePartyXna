@@ -71,6 +71,11 @@ namespace DanceParty.GameStates
             _loadingMessageDimensions = new Vector2();
             _loadingMessagePosition = new Vector2();
 
+            _loadingMessageDimensions.X = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).X;
+            _loadingMessageDimensions.Y = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).Y;
+            _loadingMessagePosition.X = (_graphicsDevice.Viewport.Width - _loadingMessageDimensions.X) / 2;
+            _loadingMessagePosition.Y = (_graphicsDevice.Viewport.Height - _loadingMessageDimensions.Y) / 2;
+
             ThreadHelper.RunAsync(LoadContentMain);
         }
 
