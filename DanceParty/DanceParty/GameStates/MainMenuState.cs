@@ -47,7 +47,7 @@ namespace DanceParty.GameStates
         private List<UIButton> _buttons = new List<UIButton> 
         {
             new UIButton("Play", OnPlayClick),
-            new UIButton("Options", OnQuitClick),
+            new UIButton("Credits", OnCreditsClick),
             new UIButton("Quit", OnQuitClick),
         };
 
@@ -58,6 +58,14 @@ namespace DanceParty.GameStates
                     DancePartyGame.Instance.GraphicsDevice,
                     DancePartyGame.Instance.SpriteBatch,
                     DancePartyGame.Instance.Content));
+        }
+
+        private static void OnCreditsClick()
+        {
+            GameStateManager.Instance.EnqueueGameState(
+                new CreditsState(
+                    DancePartyGame.Instance.GraphicsDevice,
+                    DancePartyGame.Instance.SpriteBatch));
         }
 
         private static void OnQuitClick()

@@ -61,8 +61,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\DanceParty\DanceParty\**\*.cs" 
-             Exclude="..\..\DanceParty\DanceParty\**\AssemblyInfo.cs;..\..\DanceParty\DanceParty\**\Program.cs">
+    <Compile Include="..\..\DanceParty\DanceParty\**\*.cs" Exclude="..\..\DanceParty\DanceParty\**\AssemblyInfo.cs;..\..\DanceParty\DanceParty\**\Program.cs">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

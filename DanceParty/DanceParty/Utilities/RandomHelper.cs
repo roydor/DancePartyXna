@@ -15,7 +15,8 @@ namespace DanceParty.Utilities
 
         public static int GetRandomInt(int min, int max)
         {
-            return _random.Next(min, max);
+            int ret = _random.Next(min, max);
+            return ret;
         }
     }
 }

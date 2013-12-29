@@ -21,6 +21,55 @@ using DanceParty.Cameras;
 
 namespace DanceParty.GameStates
 {
+    public class MainGameHUD
+    {
+        private Vector2 _dancersCollectedPosition;
+        
+        private Vector2 _timeRemainingPosition;
+
+        private GraphicsDevice _graphicsDevice;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
+
+        public MainGameHUD(GraphicsDevice device, SpriteBatch spriteBatch, SpriteFont spriteFont)
+        {
+            _graphicsDevice = device;
+            _spriteBatch = spriteBatch;
+            _font = spriteFont;
+        }
+
+        private string GetHumanReadableTime(TimeSpan timeSpan)
+        {
+            int minutes = timeSpan.Minutes;
+            int seconds = timeSpan.Seconds;
+
+            if (seconds < 10)
+                return minutes + ":0" + seconds;
+            else
+                return minutes + ":" + seconds;
+        }
+
+        // Dancers Collected centered at 1/4th the screen
+        // Time remaining centered at 3/4th the screen
+        public void Update(TimeSpan timeRemaining, int dancersCollected)
+        {
+            Vector2 dancersCollectedMeasurement = _font.MeasureString(dancersCollected.ToString());
+            Vector2 remainingTimeMeasurement = _font.MeasureString(GetHumanReadableTime(timeRemaining));
+
+            _dancersCollectedPosition.X = (_graphicsDevice.Viewport.Width / 4) - (dancersCollectedMeasurement.X / 2);
+            _dancersCollectedPosition.Y = 0;// _graphicsDevice.Viewport.Height - dancersCollectedMeasurement.Y;
+
+            _timeRemainingPosition.X = (3 *_graphicsDevice.Viewport.Width / 4) - (remainingTimeMeasurement.X / 2);
+            _timeRemainingPosition.Y = 0;// _graphicsDevice.Viewport.Height - remainingTimeMeasurement.Y;
+        }
+
+        public void Draw(TimeSpan timeRemaining, int dancersCollected)
+        {
+            _spriteBatch.DrawString(_font, dancersCollected.ToString(), _dancersCollectedPosition, Color.Yellow);
+            _spriteBatch.DrawString(_font, GetHumanReadableTime(timeRemaining), _timeRemainingPosition, Color.Yellow);
+        }
+    }
+
     public class MainGameState : IGameState
     {
         #region Dependencies
@@ -42,6 +91,8 @@ namespace DanceParty.GameStates
         private Song _music;
         private SoundEffectInstance _gameOverSound;
 
+        private MainGameHUD _hud;
+
         // Radians per second.
         private const float KeyboardRotationSpeed = 1.0f;
         private const float AccelerometerRotationSpeed = 2.0f;
@@ -56,18 +107,6 @@ namespace DanceParty.GameStates
             _dancerEmitter = new DancerEmitter();
             _accelerometer = AccelerometerFactory.GetAccelerometer();
         }
-
-        public string GetHumanReadableTime(TimeSpan timeSpan)
-        {
-            int minutes = timeSpan.Minutes;
-            int seconds = timeSpan.Seconds;
-
-            if (seconds < 10)
-                return minutes + ":0" + seconds;
-            else
-                return minutes + ":" + seconds;
-        }
-
 
         /// <summary>
         /// Loads all the content for this State.
@@ -92,6 +131,8 @@ namespace DanceParty.GameStates
             _music = SoundManager.Instance.GetRandomSong();
             _gameOverSound = SoundManager.Instance.GetRecordScratchInstance();
 
+            _hud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
+
             GC.Collect();
             _isLoaded = true;
             _beginGame = true;
@@ -104,6 +145,8 @@ namespace DanceParty.GameStates
         {
             _beginGame = false;
             Reset();
+            MediaPlayer.Stop();
+            MediaPlayer.IsRepeating = false;
             MediaPlayer.Play(_music);
         }
 
@@ -143,6 +186,7 @@ namespace DanceParty.GameStates
             }
 
             _cameraController.Update(gameTime);
+            _hud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count);
         }
 
         public void CheckForAddNewDancer()
@@ -244,7 +288,7 @@ namespace DanceParty.GameStates
             DrawDanceFloor(_cameraController.Camera);
 
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(FontManager.Instance.BangersMedium, GetHumanReadableTime(_music.Duration - MediaPlayer.PlayPosition), new Vector2(0, 200), Color.Yellow);
+            _hud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count);
             _spriteBatch.End();
         }
 
