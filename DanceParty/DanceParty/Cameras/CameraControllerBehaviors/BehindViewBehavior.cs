@@ -12,6 +12,7 @@ namespace DanceParty.Cameras.CameraControllerBehaviors
     {
         public const int UnitsBehind = 500;
         public const int UnitsUp = 500;
+        public const int UnitsForward = 500;
 
         private Dancer _leadDancer;
         private PerspectiveCamera _camera;
@@ -25,7 +26,7 @@ namespace DanceParty.Cameras.CameraControllerBehaviors
         public void Update(GameTime gameTime)
         {
             _camera.Position = _leadDancer.Position - _leadDancer.Forward * UnitsBehind + _leadDancer.Up * UnitsUp;
-            _camera.LookAt = _leadDancer.Position + _leadDancer.Forward * UnitsBehind;
+            _camera.LookAt = _leadDancer.Position + _leadDancer.Forward * UnitsForward;
         }
     }
 }

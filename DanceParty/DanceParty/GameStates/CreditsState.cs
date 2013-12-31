@@ -74,9 +74,9 @@ namespace DanceParty.GameStates
             new CreditsSection("Animation", new List<string> { "Roy Dorombozi"} ),
             new CreditsSection("Development", new List<string> { "Roy Dorombozi"} ),
             new CreditsSection("Models", new List<string> { "Clint Bellanger", "Roy Dorombozi"} ),
-            new CreditsSection("Music", new List<string> { "Roden Santos"}),
+            new CreditsSection("Music", new List<string> { "Rodhen Santos"}),
             new CreditsSection("Skinning", new List<string> { "Roy Dorombozi"} ),
-            new CreditsSection("Special Thanks", new List<string> { "Nancy Do", "James Leung"}),
+            new CreditsSection("Special Thanks", new List<string> { "Nancy Do", "James Leung", "Everyone else who helped along the way!"}),
         };
 
         private SpriteBatch _spriteBatch;

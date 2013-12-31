@@ -93,6 +93,13 @@ namespace DanceParty.GameStates
 
         private MainGameHUD _hud;
 
+        private Model _danceFloor;
+        private Vector3 _light1Direction = Vector3.Normalize(new Vector3(-1, -1, -1));
+        private Vector3 _light1Color = Vector3.One * 0.8f;
+
+        private Vector3 _light2Direction = Vector3.Normalize(new Vector3(1, -1, 1));
+        private Vector3 _light2Color = Vector3.One * 0.2f;
+
         // Radians per second.
         private const float KeyboardRotationSpeed = 1.0f;
         private const float AccelerometerRotationSpeed = 2.0f;
@@ -132,6 +139,8 @@ namespace DanceParty.GameStates
             _gameOverSound = SoundManager.Instance.GetRecordScratchInstance();
 
             _hud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
+
+            _danceFloor = _contentManager.Load<Model>("Models\\DanceRoom");
 
             GC.Collect();
             _isLoaded = true;
@@ -202,7 +211,7 @@ namespace DanceParty.GameStates
                 GameOver();
 
             // Out of bounds?
-            if (_congaLine.LeadDancer.Position.Length() > 1500f)
+            if (_congaLine.LeadDancer.Position.Length() > 1375f)
                 GameOver();
         }
 
@@ -276,7 +285,7 @@ namespace DanceParty.GameStates
             ss.AddressU = TextureAddressMode.Clamp;
             ss.AddressV = TextureAddressMode.Clamp;
 
-            _graphicsDevice.Clear(Color.DarkSlateBlue);
+            _graphicsDevice.Clear(Color.Black);
             _graphicsDevice.BlendState = BlendState.Opaque;
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.SamplerStates[0] = ss;
@@ -294,31 +303,30 @@ namespace DanceParty.GameStates
 
         private void DrawDanceFloor(PerspectiveCamera camera)
         {
-            VertexPositionColor[] userPrimitives;
-            BasicEffect basicEffect;
-
-            //Create the vertices for traingle
-            userPrimitives = new VertexPositionColor[31];
-
-            for (int i = 0; i < 31; i++)
+            foreach (ModelMesh mesh in _danceFloor.Meshes)
             {
-                float angle = MathHelper.TwoPi * (i / 30.0f);
-                userPrimitives[i] = new VertexPositionColor();
-                userPrimitives[i].Position = new Vector3(1500 * (float)Math.Sin(angle), 1, 1500 * (float)Math.Cos(angle));
-                userPrimitives[i].Color = Color.Red;
-            }
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.World = Dancer.ModelAdjustment;
 
-            //Create new basic effect and properties
-            basicEffect = new BasicEffect(_graphicsDevice);
-            basicEffect.World = Matrix.Identity;
-            basicEffect.View = camera.ViewMatrix;
-            basicEffect.Projection = camera.ProjectionMatrix;
-            basicEffect.VertexColorEnabled = true;
+                    effect.Projection = camera.ProjectionMatrix;
+                    effect.View = camera.ViewMatrix;
 
-            //Start using the BasicEffect
-            basicEffect.CurrentTechnique.Passes[0].Apply();
-            //Draw the primitives
-            _graphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, userPrimitives, 0, 30);
+                    effect.LightingEnabled = true;
+                    effect.EnableDefaultLighting();
+
+                    effect.DirectionalLight0.Direction = _light1Direction;
+                    effect.DirectionalLight0.DiffuseColor = _light1Color;
+                    effect.DirectionalLight0.SpecularColor = Vector3.Zero;
+
+                    effect.DirectionalLight1.Direction = _light2Direction;
+                    effect.DirectionalLight1.DiffuseColor = _light2Color;
+                    effect.DirectionalLight1.SpecularColor = Vector3.Zero;
+                }
+
+                mesh.Draw();
+                DancePartyGame.DrawsPerFrame++;
+            }   
         }
 
         public void Dispose()

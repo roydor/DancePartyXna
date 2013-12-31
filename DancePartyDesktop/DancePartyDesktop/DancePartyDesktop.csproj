@@ -52,6 +52,7 @@
     <ProjectReference Include="..\SkinnedModel\SkinnedModel.csproj">
       <Project>{d2c2eed2-ebcc-4705-b0cd-3adaa8b74546}</Project>
       <Name>SkinnedModel</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +64,6 @@
   <ItemGroup>
     <Compile Include="..\..\DanceParty\DanceParty\**\*.cs" Exclude="..\..\DanceParty\DanceParty\**\AssemblyInfo.cs;..\..\DanceParty\DanceParty\**\Program.cs">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

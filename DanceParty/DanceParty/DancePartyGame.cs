@@ -45,8 +45,6 @@ namespace DanceParty
 
         public static int DrawsPerFrame = 0;
 
-        private SpriteFont _segoeUI;
-
         public DancePartyGame()
         {
             _instance = this;
@@ -112,11 +110,12 @@ namespace DanceParty
 
         protected override void Draw(GameTime gameTime)
         {
+            DrawsPerFrame = 0;
            _gameStateManager.GetCurrentState().Draw(gameTime);
            _fpsTracker.Update(gameTime);
 
            SpriteBatch.Begin();
-           SpriteBatch.DrawString(FontManager.Instance.BangersSmall, "FPS: " + _fpsTracker.CurrentFPS, Vector2.Zero, Color.White);
+           SpriteBatch.DrawString(FontManager.Instance.BangersSmall, string.Format("FPS: {0}\r\nDraws: {1}", _fpsTracker.CurrentFPS, DrawsPerFrame), Vector2.Zero, Color.White);
            SpriteBatch.End();
             base.Draw(gameTime);
         }
