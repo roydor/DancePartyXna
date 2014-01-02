@@ -5,7 +5,8 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
+
+using DanceParty.Utilities.TouchWrapper;
 
 namespace DanceParty
 {
@@ -14,11 +15,13 @@ namespace DanceParty
         private Vector2? _clickedLocation;
         private bool _mouseDownLastFrame;
         private bool _supportsTouch;
+        private ITouchWrapper _touchWrapper;
 
         private PointerInputManager()
         {
             _clickedLocation = Vector2.Zero;
-            _supportsTouch = TouchPanel.GetCapabilities().IsConnected;
+            _touchWrapper = TouchWrapperFactory.GetTouchWrapper();
+            _supportsTouch = _touchWrapper.IsSupported();
         }
 
         private static PointerInputManager _instance;
@@ -36,16 +39,8 @@ namespace DanceParty
         public void Update()
         {
             _clickedLocation = null;
-            if (_supportsTouch)
-            {
-                foreach (TouchLocation touchLocation in TouchPanel.GetState())
-                {
-                    if (touchLocation.State == TouchLocationState.Pressed)
-                    {
-                        _clickedLocation = touchLocation.Position;
-                    }
-                }
-            }
+            if (_touchWrapper.IsSupported())
+                _clickedLocation = _touchWrapper.GetTouchPoint();
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed && !_mouseDownLastFrame)

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{894EA0EA-2158-4783-948A-FDE6BFDF38F9}</ProjectGuid>
+    <ProjectGuid>{84A84C3A-B55A-4989-8B10-1C6B5042DBFB}</ProjectGuid>
     <ProjectTypeGuids>{96E2B04D-8817-42c6-938A-82C39BA4D311};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -12,14 +12,14 @@
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
     <ContentRootDirectory>Content</ContentRootDirectory>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Windows Phone'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Windows Phone'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>DancePartyContent</RootNamespace>
+    <RootNamespace>DancePartyDesktopContent</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.EffectImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
@@ -30,103 +30,105 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\SegoeUI.spritefont">
-      <Name>SegoeUI</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-      <SubType>Designer</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\male0.png">
-      <Name>male0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\female1.png">
-      <Name>female1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\female_low.fbx">
-      <Name>female_low</Name>
+    <Compile Include="..\..\..\Blender\DanceRoom\DanceRoom.fbx">
+      <Link>Models\DanceRoom.fbx</Link>
+      <Name>DanceRoom</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Models\male_low.fbx">
-      <Name>male_low</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\BangersLarge.bmp">
-      <Name>BangersLarge</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>FontTextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\BangersMedium.bmp">
-      <Name>BangersMedium</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>FontTextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Fonts\BangersSmall.bmp">
-      <Name>BangersSmall</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>FontTextureProcessor</Processor>
-    </Compile>
+    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
+      <Project>{75f908d2-751e-4692-a147-4f03c04e25bb}</Project>
+      <Name>SkinnedModelPipeline</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\Music0.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music0.mp3">
+      <Link>Audio\Music0.mp3</Link>
       <Name>Music0</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Audio\Music1.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music1.mp3">
+      <Link>Audio\Music1.mp3</Link>
       <Name>Music1</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Audio\Music2.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music2.mp3">
+      <Link>Audio\Music2.mp3</Link>
       <Name>Music2</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Audio\Music3.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music3.mp3">
+      <Link>Audio\Music3.mp3</Link>
       <Name>Music3</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Audio\Music4.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music4.mp3">
+      <Link>Audio\Music4.mp3</Link>
       <Name>Music4</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Audio\RecordScratch.mp3">
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\RecordScratch.mp3">
+      <Link>Audio\RecordScratch.mp3</Link>
       <Name>RecordScratch</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Blender\DanceRoom\DanceRoom.fbx">
-      <Link>Models\DanceRoom.fbx</Link>
-      <Name>DanceRoom</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersLarge.bmp">
+      <Link>Fonts\BangersLarge.bmp</Link>
+      <Name>BangersLarge</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersMedium.bmp">
+      <Link>Fonts\BangersMedium.bmp</Link>
+      <Name>BangersMedium</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersSmall.bmp">
+      <Link>Fonts\BangersSmall.bmp</Link>
+      <Name>BangersSmall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>FontTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
-      <Project>{5ea59ce0-e3a1-466d-99b3-f1996d35f758}</Project>
-      <Name>SkinnedModelPipeline</Name>
-    </ProjectReference>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Models\female_low.fbx">
+      <Link>Models\female_low.fbx</Link>
+      <Name>female_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Models\male_low.fbx">
+      <Link>Models\male_low.fbx</Link>
+      <Name>male_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Textures\female1.png">
+      <Link>Textures\female1.png</Link>
+      <Name>female1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\..\DanceParty\DancePartyContent\Textures\male0.png">
+      <Link>Textures\male0.png</Link>
+      <Name>male0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

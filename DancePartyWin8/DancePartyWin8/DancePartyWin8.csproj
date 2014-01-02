@@ -140,13 +140,6 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Thumbs.db" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\DanceParty\DanceParty\bin\Windows Phone\Debug\Content\**">
-      <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\DanceParty\DanceParty\**\*.cs" Exclude="..\..\DanceParty\DanceParty\**\AssemblyInfo.cs;..\..\DanceParty\DanceParty\**\Program.cs">
@@ -159,6 +152,12 @@
       <Project>{2316411d-e6e5-4464-8d39-5265ab59b4d3}</Project>
       <Name>SkinnedModelMetro</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\**">
+      <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
