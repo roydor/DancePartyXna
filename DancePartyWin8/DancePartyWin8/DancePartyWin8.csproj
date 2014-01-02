@@ -133,18 +133,14 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DancePartyWin8_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\DanceParty\DanceParty\**\*.cs" Exclude="..\..\DanceParty\DanceParty\**\AssemblyInfo.cs;..\..\DanceParty\DanceParty\**\Program.cs">
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\**\*.cs" Exclude="**\AssemblyInfo.cs;**\Program.cs">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>

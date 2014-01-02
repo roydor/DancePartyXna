@@ -65,43 +65,6 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\CongaLine.cs" />
-    <Compile Include="Actors\DancerBehaviors\EnterFloorDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\FallingDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\JoinLineDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\FollowingDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\IDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\IdleDancerBehavior.cs" />
-    <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
-    <Compile Include="Actors\DancerEmitter.cs" />
-    <Compile Include="Actors\DancerFactory.cs" />
-    <Compile Include="BatchedModelManager.cs" />
-    <Compile Include="Cameras\CameraController.cs" />
-    <Compile Include="Cameras\CameraControllerBehaviors\BehindViewBehavior.cs" />
-    <Compile Include="Cameras\CameraControllerBehaviors\ICameraControllerBehavior.cs" />
-    <Compile Include="Cameras\PerspectiveCamera.cs" />
-    <Compile Include="Actors\Dancer.cs" />
-    <Compile Include="FontManager.cs" />
-    <Compile Include="GameStates\CreditsState.cs" />
-    <Compile Include="GameStates\GameStateActions.cs" />
-    <Compile Include="GameStates\GameStateManager.cs" />
-    <Compile Include="GameStates\IGameState.cs" />
-    <Compile Include="GameStates\LoadingState.cs" />
-    <Compile Include="GameStates\MainGameState.cs" />
-    <Compile Include="GameStates\MainMenuState.cs" />
-    <Compile Include="PointerInputManager.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoundManager.cs" />
-    <Compile Include="Utilities\Accelerometer\*.cs" />
-    <Compile Include="Utilities\AnimatedInstancedModel.cs" />
-    <Compile Include="Utilities\FPSTracker.cs" />
-    <Compile Include="Utilities\TouchWrapper\*.cs" />
-    <Compile Include="Utilities\InstancedModel.cs" />
-    <Compile Include="Utilities\RandomHelper.cs" />
-    <Compile Include="Utilities\Threading\Windows8ThreadHelper.cs" />
-    <Compile Include="Utilities\Threading\ThreadHelper.cs" />
-    <Compile Include="Utilities\Threading\WindowsPhoneThreadHelper.cs" />
-    <Compile Include="Utilities\Utilities.cs" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
@@ -110,7 +73,6 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="Program.cs" />
-    <Compile Include="DancePartyGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -120,6 +82,11 @@
     <Content Include="Background.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\**\*.cs" Exclude="**\AssemblyInfo.cs;**\Program.cs">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SkinnedModel\SkinnedModel.csproj">
