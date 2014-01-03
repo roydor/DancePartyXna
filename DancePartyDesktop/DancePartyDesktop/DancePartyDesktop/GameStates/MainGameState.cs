@@ -210,7 +210,7 @@ namespace DanceParty.GameStates
                 GameOver();
 
             // Out of bounds?
-            if (_congaLine.LeadDancer.Position.Length() > 1325f)
+            if (_congaLine.LeadDancer.Position.Length() > 1350f)
                 GameOver();
         }
 
