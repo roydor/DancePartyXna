@@ -76,7 +76,9 @@ namespace DanceParty.Utilities
             _originalModel = model;
             _originalBoneCount = model.Bones.Count;
 
-            _skinnedEffect = (SkinnedEffect) model.Meshes[0].Effects[0];
+            _skinnedEffect = new SkinnedEffect(_graphicsDevice);
+            _skinnedEffect.SpecularColor = Vector3.Zero;
+            _skinnedEffect.EnableDefaultLighting();
 
             SetupInstancedVertexData();
         }
@@ -122,6 +124,9 @@ namespace DanceParty.Utilities
             // Each model has n bones, so we can only fit max bones / bones per model instances per draw
             _maxInstances = Math.Min(indexOverflowLimit, maxShaderMatrices / _originalBoneCount);
 
+            // Get the number of bytes per vertex.
+            _vertexStride = part.VertexBuffer.VertexDeclaration.VertexStride;
+
             int newVertexCount = _originalVertexCount * _maxInstances;
             int newVertexBufferSize = newVertexCount * _vertexStride;
 
@@ -132,9 +137,6 @@ namespace DanceParty.Utilities
                        "Attempted to create a vertex buffer of size {0} bytes.\r\n" +
                        "Maximum vertex or index buffer size is 67108863 bytes (64MB)",
                            newVertexBufferSize / 0x1000000));
-
-            // Get the number of bytes per vertex.
-            _vertexStride = part.VertexBuffer.VertexDeclaration.VertexStride;
 
             byte[] oldVertexData = new byte[_originalVertexCount * _vertexStride];
             part.VertexBuffer.GetData(oldVertexData);
@@ -169,6 +171,11 @@ namespace DanceParty.Utilities
                     // Set the weight on bone4 to be 100%
                     int bone4offset = BoneWeight4Offset + blendWeightOffset;
                     byte[] bone4weight = BitConverter.GetBytes(1.0f);
+
+                    float weight0 = BitConverter.ToSingle(oldVertexData, blendWeightOffset+0);
+                    float weight1 = BitConverter.ToSingle(oldVertexData, blendWeightOffset+4);
+                    float weight2 = BitConverter.ToSingle(oldVertexData, blendWeightOffset+8);
+                    float weight3 = BitConverter.ToSingle(oldVertexData, blendWeightOffset+12);
 
                     // 16-20-24-28
                     newVertexData[outputPosition + bone4offset + 0] = bone4weight[0];
@@ -256,7 +263,6 @@ namespace DanceParty.Utilities
             PerspectiveCamera camera,
             Texture2D skin)
         {
-            _skinnedEffect.EnableDefaultLighting();
             _skinnedEffect.Texture = skin;
             _skinnedEffect.View = camera.ViewMatrix;
             _skinnedEffect.Projection = camera.ProjectionMatrix;

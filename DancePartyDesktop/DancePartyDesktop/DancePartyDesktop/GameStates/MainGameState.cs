@@ -123,6 +123,8 @@ namespace DanceParty.GameStates
             _isLoaded = false;
             BatchedModelManager.Instance.LoadContent(_contentManager, _graphicsDevice);
 
+            AnimationManager.Instance.LoadContent();
+
             Dancer leader = DancerFactory.Instance.GetRandomDancer();
             leader.SetDancerBehavior(new LeadDancerBehavior(leader));
             _congaLine = new CongaLine(leader);
@@ -325,7 +327,7 @@ namespace DanceParty.GameStates
 
                 mesh.Draw();
                 DancePartyGame.DrawsPerFrame++;
-            }   
+            }
         }
 
         public void Dispose()

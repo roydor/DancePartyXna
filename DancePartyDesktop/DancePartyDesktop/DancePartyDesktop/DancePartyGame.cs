@@ -37,7 +37,7 @@ namespace DanceParty
 
         private GameStateManager _gameStateManager;
 
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager GraphicsDeviceManager;
         public SpriteBatch SpriteBatch;
 
         private FPSTracker _fpsTracker;
@@ -48,7 +48,7 @@ namespace DanceParty
         {
             _instance = this;
             this.IsMouseVisible = true;
-            graphics = new GraphicsDeviceManager(this);
+            GraphicsDeviceManager = new GraphicsDeviceManager(this);
             _gameStateManager = GameStateManager.Instance;
             _fpsTracker = new FPSTracker();
 

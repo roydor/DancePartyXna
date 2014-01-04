@@ -45,89 +45,99 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music0.mp3">
-      <Link>Audio\Music0.mp3</Link>
+    <Compile Include="Audio\Music0.mp3">
       <Name>Music0</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music1.mp3">
-      <Link>Audio\Music1.mp3</Link>
-      <Name>Music1</Name>
+    <Compile Include="Audio\Music1.mp3">
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
+      <Name>Music1</Name>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music2.mp3">
-      <Link>Audio\Music2.mp3</Link>
+    <Compile Include="Audio\Music2.mp3">
       <Name>Music2</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music3.mp3">
-      <Link>Audio\Music3.mp3</Link>
+    <Compile Include="Audio\Music3.mp3">
       <Name>Music3</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\Music4.mp3">
-      <Link>Audio\Music4.mp3</Link>
+    <Compile Include="Audio\Music4.mp3">
       <Name>Music4</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Audio\RecordScratch.mp3">
-      <Link>Audio\RecordScratch.mp3</Link>
+    <Compile Include="Audio\RecordScratch.mp3">
       <Name>RecordScratch</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersLarge.bmp">
+    <Compile Include="Fonts\BangersLarge.bmp">
       <Link>Fonts\BangersLarge.bmp</Link>
       <Name>BangersLarge</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FontTextureProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersMedium.bmp">
-      <Link>Fonts\BangersMedium.bmp</Link>
+    <Compile Include="Fonts\BangersMedium.bmp">
       <Name>BangersMedium</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FontTextureProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Fonts\BangersSmall.bmp">
-      <Link>Fonts\BangersSmall.bmp</Link>
+    <Compile Include="Fonts\BangersSmall.bmp">
       <Name>BangersSmall</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FontTextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Models\female_low.fbx">
-      <Link>Models\female_low.fbx</Link>
+    <Compile Include="Models\female_low.fbx">
       <Name>female_low</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Models\male_low.fbx">
-      <Link>Models\male_low.fbx</Link>
+    <Compile Include="Models\male_low.fbx">
       <Name>male_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation\Base.fbx">
+      <Name>Base</Name>
       <Importer>FbxImporter</Importer>
       <Processor>SkinnedModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Textures\female1.png">
-      <Link>Textures\female1.png</Link>
-      <Name>female1</Name>
+    <Compile Include="Textures\female1_0.png">
+      <Name>female1_0</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="..\..\..\DanceParty\DancePartyContent\Textures\male0.png">
-      <Link>Textures\male0.png</Link>
-      <Name>male0</Name>
+    <Compile Include="Textures\male_0.png">
+      <Name>male_0</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\female_0.png">
+      <Name>female_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Blender\fxb\female1.fbx">
+      <Link>Models\female1.fbx</Link>
+      <Name>female1</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

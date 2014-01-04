@@ -78,21 +78,34 @@ namespace DanceParty
                     graphicsDevice, 
                     contentManager.Load<Model>("Models\\female_low"));
 
+            BatchRenderedAnimatedModel animatedBobDress =
+                new BatchRenderedAnimatedModel(
+                    graphicsDevice,
+                    contentManager.Load<Model>("Models\\female1"));
+
             // Create instance containers to group skins with the models.
             BatchedAnimatedModelContainer maleContainer = 
                 new BatchedAnimatedModelContainer(
                     animatedMaleModel,
-                    contentManager.Load<Texture2D>("Textures\\male0"),
+                    contentManager.Load<Texture2D>("Textures\\male_0"),
                     DancerType.Male);
 
             BatchedAnimatedModelContainer femaleContainer = 
                 new BatchedAnimatedModelContainer(
                     animatedFemaleMOdel,
-                    contentManager.Load<Texture2D>("Textures\\female1"),
+                    contentManager.Load<Texture2D>("Textures\\female_0"),
                     DancerType.Female);
+
+            BatchedAnimatedModelContainer bobContainer =
+             new BatchedAnimatedModelContainer(
+                 animatedBobDress,
+                 contentManager.Load<Texture2D>("Textures\\female1_0"),
+                 DancerType.Female);
 
             _batchedAnimatedModelContainers.Add(maleContainer);
             _batchedAnimatedModelContainers.Add(femaleContainer);
+            _batchedAnimatedModelContainers.Add(bobContainer);
+
         }
 
         public AnimatedModelInstance GetAnimatedModelInstance()

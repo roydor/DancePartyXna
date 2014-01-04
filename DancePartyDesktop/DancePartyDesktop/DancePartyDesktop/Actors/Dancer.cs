@@ -71,7 +71,7 @@ namespace DanceParty.Actors
         public Dancer(AnimatedModelInstance modelInstance)
         {
             _modelInstance = modelInstance;
-            _animationPlayer = new AnimationPlayer((SkinningData)_modelInstance.OriginalModel.Tag);
+            _animationPlayer = new AnimationPlayer(AnimationManager.Instance.GetAnimationData());
 
             _accessories = new List<Accessory>();
 
