@@ -15,8 +15,7 @@ using DanceParty.Utilities.Threading;
 
 namespace DanceParty.GameStates
 {
-    public delegate void LoadContentFunction();
-
+    public delegate void LoadContentFunction(LoadStateReporter loadStateReporter);
     public static class LoadingStateFactory
     {
         public static LoadingState GetLoadingState(LoadContentFunction loadFunction)
@@ -30,6 +29,7 @@ namespace DanceParty.GameStates
 
     public class LoadingState : IGameState
     {
+        private LoadStateReporter _loadStateReporter;
         private LoadContentFunction _loadFunction;
         private bool _loadingComplete;
 
@@ -66,21 +66,19 @@ namespace DanceParty.GameStates
             _loadingComplete = false;
             _loadFunction = loadFunction;
             _animatedMessage = _loadingTextBase;
+            _loadStateReporter = new LoadStateReporter();
             
-            _loadingMessageDimensions = new Vector2();
-            _loadingMessagePosition = new Vector2();
-
-            _loadingMessageDimensions.X = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).X;
-            _loadingMessageDimensions.Y = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).Y;
-            _loadingMessagePosition.X = (_graphicsDevice.Viewport.Width - _loadingMessageDimensions.X) / 2;
-            _loadingMessagePosition.Y = (_graphicsDevice.Viewport.Height - _loadingMessageDimensions.Y) / 2;
+            _loadingMessageDimensions = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage);
+            _loadingMessagePosition = new Vector2(
+                    (_graphicsDevice.Viewport.Width - _loadingMessageDimensions.X) / 2, 
+                    (_graphicsDevice.Viewport.Height - _loadingMessageDimensions.Y) / 2);
 
             ThreadHelper.RunAsync(LoadContentMain);
         }
 
         private void LoadContentMain()
         {
-            _loadFunction();
+            _loadFunction(_loadStateReporter);
             _loadingComplete = true;
         }
 
@@ -109,9 +107,9 @@ namespace DanceParty.GameStates
                         _animatedMessage = _dot + _animatedMessage + _dot;
                     }
                 }
-                
-                _loadingMessageDimensions.X = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).X;
-                _loadingMessageDimensions.Y = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage).Y;
+
+                _loadingMessageDimensions = FontManager.Instance.BangersLarge.MeasureString(_animatedMessage);
+
                 _loadingMessagePosition.X = (_graphicsDevice.Viewport.Width - _loadingMessageDimensions.X) / 2;
                 _loadingMessagePosition.Y = (_graphicsDevice.Viewport.Height - _loadingMessageDimensions.Y) / 2;
             }
@@ -127,6 +125,16 @@ namespace DanceParty.GameStates
             _graphicsDevice.Clear(Color.DarkSlateBlue);
             _spriteBatch.Begin();
             _spriteBatch.DrawString(FontManager.Instance.BangersLarge, _animatedMessage, _loadingMessagePosition, Color.Yellow);
+
+            lock(_loadStateReporter)
+            {
+                Vector2 loadStatusDimensions = FontManager.Instance.BangersSmall.MeasureString(_loadStateReporter.CurrentStatus);
+                Vector2 loadStatusPosition;
+                loadStatusPosition.X = (_graphicsDevice.Viewport.Width - loadStatusDimensions.X) / 2;
+                loadStatusPosition.Y = _graphicsDevice.Viewport.Height - loadStatusDimensions.Y;
+
+                _spriteBatch.DrawString(FontManager.Instance.BangersSmall, _loadStateReporter.CurrentStatus, loadStatusPosition, Color.Yellow);
+            }
             _spriteBatch.End();
         }
 

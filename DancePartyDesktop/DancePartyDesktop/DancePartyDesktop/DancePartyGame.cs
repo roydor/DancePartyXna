@@ -18,6 +18,7 @@ using DanceParty.Utilities;
 using DanceParty.Utilities.Accelerometer;
 using DanceParty.Cameras.CameraControllerBehaviors;
 using DanceParty.GameStates;
+using DanceParty.Utilities.Threading;
 
 namespace DanceParty
 {
@@ -49,6 +50,7 @@ namespace DanceParty
             _instance = this;
             this.IsMouseVisible = true;
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            GraphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24;
             _gameStateManager = GameStateManager.Instance;
             _fpsTracker = new FPSTracker();
 
@@ -84,8 +86,9 @@ namespace DanceParty
             _gameStateManager.EnqueueGameState(LoadingStateFactory.GetLoadingState(LoadAudio));
         }
 
-        public void LoadAudio()
+        public void LoadAudio(LoadStateReporter loadStateReporter)
         {
+            loadStateReporter.CurrentStatus = "Loading Audio";
             SoundManager.Instance.LoadAudio();
         }
 

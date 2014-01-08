@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DancePartyWin8", "DancePartyWin8\DancePartyWin8.csproj", "{4A2E8BB6-12D7-4B22-86E5-E6A00D175AA6}"
 EndProject
-Project("{2316411D-E6E5-4464-8D39-5265AB59B4D3}") = "SkinnedModel", "SkinnedModel\SkinnedModel.csproj", "{2316411D-E6E5-4464-8D39-5265AB59B4D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModel", "SkinnedModel\SkinnedModel.csproj", "{2316411D-E6E5-4464-8D39-5265AB59B4D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,5 +78,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

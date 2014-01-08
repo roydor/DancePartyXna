@@ -38,32 +38,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\male0.png">
-      <Name>male0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\female1.png">
-      <Name>female1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\female_low.fbx">
-      <Name>female_low</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Models\male_low.fbx">
-      <Name>male_low</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Fonts\BangersLarge.bmp">
       <Name>BangersLarge</Name>
       <Importer>TextureImporter</Importer>
@@ -127,6 +101,65 @@
       <Project>{5ea59ce0-e3a1-466d-99b3-f1996d35f758}</Project>
       <Name>SkinnedModelPipeline</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation\Base.fbx">
+      <Name>Base</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktopContent\Textures\female1_0.png">
+      <Link>Textures\female1_0.png</Link>
+      <Name>female1_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktopContent\Textures\female2_0.png">
+      <Link>Textures\female2_0.png</Link>
+      <Name>female2_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktopContent\Textures\female_0.png">
+      <Link>Textures\female_0.png</Link>
+      <Name>female_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktopContent\Textures\male_0.png">
+      <Link>Textures\male_0.png</Link>
+      <Name>male_0</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Blender\fxb\female1.fbx">
+      <Link>Models\female1.fbx</Link>
+      <Name>female1</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\Blender\fxb\female2.fbx">
+      <Link>Models\female2.fbx</Link>
+      <Name>female2</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\Blender\fxb\female_low.fbx">
+      <Link>Models\female_low.fbx</Link>
+      <Name>female_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="..\..\Blender\fxb\male_low.fbx">
+      <Link>Models\male_low.fbx</Link>
+      <Name>male_low</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

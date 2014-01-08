@@ -22,7 +22,7 @@ namespace DanceParty.Cameras.CameraControllerBehaviors
             _camera = camera;
             _leadDancer = leadDancer;
         }
-
+        
         public void Update(GameTime gameTime)
         {
             _camera.Position = _leadDancer.Position - _leadDancer.Forward * UnitsBehind + _leadDancer.Up * UnitsUp;

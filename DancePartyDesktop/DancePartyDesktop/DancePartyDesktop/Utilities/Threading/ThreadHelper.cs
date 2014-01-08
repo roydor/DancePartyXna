@@ -5,6 +5,11 @@ using System.Text;
 
 namespace DanceParty.Utilities.Threading
 {
+    public class LoadStateReporter
+    {
+        public volatile string CurrentStatus = "";
+    }
+
     public static class ThreadHelper
     {
         public delegate void FunctionCallback();

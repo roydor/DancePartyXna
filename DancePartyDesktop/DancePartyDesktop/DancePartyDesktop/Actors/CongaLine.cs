@@ -32,6 +32,18 @@ namespace DanceParty.Actors
                 return _dancers[_dancers.Count - 1];
             }
         }
+
+        public Dancer LastFallenDancer
+        {
+            get
+            {
+                if (_dancersFallen < _dancers.Count)
+                {
+                    return _dancers[_dancersFallen];
+                }
+                return _dancers[_dancers.Count - 1];
+            }
+        }
         
         public CongaLine(Dancer leadDancer)
         {

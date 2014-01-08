@@ -77,7 +77,10 @@ namespace DanceParty.Utilities
             _originalBoneCount = model.Bones.Count;
 
             _skinnedEffect = new SkinnedEffect(_graphicsDevice);
-            _skinnedEffect.AmbientLightColor = Color.White.ToVector3();
+            _skinnedEffect.EnableDefaultLighting();
+            _skinnedEffect.AmbientLightColor = Color.Gray.ToVector3();
+            _skinnedEffect.SpecularColor = Color.Gray.ToVector3();
+            _skinnedEffect.PreferPerPixelLighting = true;
 
             SetupInstancedVertexData();
         }

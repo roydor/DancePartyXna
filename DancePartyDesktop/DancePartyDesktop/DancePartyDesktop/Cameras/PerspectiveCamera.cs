@@ -11,8 +11,8 @@ namespace DanceParty.Cameras
     public class PerspectiveCamera
     {
         internal const float PerspectiveFieldOfView = MathHelper.PiOver4; //45 degrees
-        internal const float NearPlane = 0.1f;
-        internal const float FarPlane = 5000.0f;
+        internal const float NearPlane = 50f;
+        internal const float FarPlane = 3500.0f;
 
         /// <summary>
         /// The position of this camera.

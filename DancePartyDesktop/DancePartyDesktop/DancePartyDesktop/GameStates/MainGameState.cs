@@ -17,6 +17,7 @@ using DanceParty.Cameras.CameraControllerBehaviors;
 using DanceParty.GameStates;
 using SkinnedModel;
 using DanceParty.Cameras;
+using DanceParty.Utilities.Threading;
 
 namespace DanceParty.GameStates
 {
@@ -77,6 +78,9 @@ namespace DanceParty.GameStates
         private ContentManager _contentManager;
         #endregion
 
+        public static float DanceFloorBoundary = 1350f;
+        public static int MaxDancersOnFloor = 100;
+
         private CongaLine _congaLine;
         private DancerEmitter _dancerEmitter;
         private CameraController _cameraController;
@@ -118,13 +122,16 @@ namespace DanceParty.GameStates
         /// Loads all the content for this State.
         /// You should show a loading screen here, it may take a while.
         /// </summary>
-        public void LoadContent()
+        public void LoadContent(LoadStateReporter loadStateReporter)
         {
             _isLoaded = false;
+            loadStateReporter.CurrentStatus = "Loading Models";
             BatchedModelManager.Instance.LoadContent(_contentManager, _graphicsDevice);
 
+            loadStateReporter.CurrentStatus = "Loading Animation";
             AnimationManager.Instance.LoadContent();
 
+            loadStateReporter.CurrentStatus = "Creating CongaLine";
             Dancer leader = DancerFactory.Instance.GetRandomDancer();
             leader.SetDancerBehavior(new LeadDancerBehavior(leader));
             _congaLine = new CongaLine(leader);
@@ -136,11 +143,13 @@ namespace DanceParty.GameStates
 
             _accelerometer.Start();
 
+            loadStateReporter.CurrentStatus = "Requesting DJ to play a song";
             _music = SoundManager.Instance.GetRandomSong();
             _gameOverSound = SoundManager.Instance.GetRecordScratchInstance();
 
             _hud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
 
+            loadStateReporter.CurrentStatus = "Loading DanceRoom";
             _danceFloor = _contentManager.Load<Model>("Models\\DanceRoom");
 
             GC.Collect();
@@ -202,7 +211,7 @@ namespace DanceParty.GameStates
         public void CheckForAddNewDancer()
         {
             // Add a new dancer if there is less than 15
-            if (_dancers.Count < 15)
+            if (_dancers.Count < MaxDancersOnFloor)
                 _dancers.Add(_dancerEmitter.EmitDancer());
         }
 
@@ -212,7 +221,7 @@ namespace DanceParty.GameStates
                 GameOver();
 
             // Out of bounds?
-            if (_congaLine.LeadDancer.Position.Length() > 1350f)
+            if (_congaLine.LeadDancer.Position.Length() > DanceFloorBoundary)
                 GameOver();
         }
 
@@ -241,6 +250,7 @@ namespace DanceParty.GameStates
             _gameOverSound.Play();
             MediaPlayer.Stop();
             _congaLine.Stop();
+            _cameraController.SetCameraBehavior(new GameOverCameraBehavior(_cameraController.Camera, _congaLine));
             _isGameOver = true;
         }
 
@@ -293,8 +303,6 @@ namespace DanceParty.GameStates
 
             BatchedModelManager.Instance.DrawInstances(_cameraController.Camera);
 
-            // Dont draw the dance floor this way later...
-            // It should be the model for the room
             DrawDanceFloor(_cameraController.Camera);
 
             _spriteBatch.Begin();
