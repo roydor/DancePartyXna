@@ -73,50 +73,50 @@ namespace DanceParty
                     graphicsDevice, 
                     contentManager.Load<Model>("Models\\male_low"));
 
-            //BatchRenderedAnimatedModel animatedFemaleMOdel = 
+            BatchRenderedAnimatedModel animatedFemaleMOdel =
+                new BatchRenderedAnimatedModel(
+                    graphicsDevice,
+                    contentManager.Load<Model>("Models\\female_low"));
+
+            //BatchRenderedAnimatedModel animatedBobDress =
             //    new BatchRenderedAnimatedModel(
-            //        graphicsDevice, 
-            //        contentManager.Load<Model>("Models\\female_low"));
+            //        graphicsDevice,
+            //        contentManager.Load<Model>("Models\\female1"));
 
-            BatchRenderedAnimatedModel animatedBobDress =
-                new BatchRenderedAnimatedModel(
-                    graphicsDevice,
-                    contentManager.Load<Model>("Models\\female1"));
-
-            BatchRenderedAnimatedModel animatedFemale2 =
-                new BatchRenderedAnimatedModel(
-                    graphicsDevice,
-                    contentManager.Load<Model>("Models\\female2"));
+            //BatchRenderedAnimatedModel animatedFemale2 =
+            //    new BatchRenderedAnimatedModel(
+            //        graphicsDevice,
+            //        contentManager.Load<Model>("Models\\female2"));
 
             // Create instance containers to group skins with the models.
-            BatchedAnimatedModelContainer maleContainer = 
+            BatchedAnimatedModelContainer maleContainer =
                 new BatchedAnimatedModelContainer(
                     animatedMaleModel,
                     contentManager.Load<Texture2D>("Textures\\male_0"),
                     DancerType.Male);
 
-            //BatchedAnimatedModelContainer femaleContainer = 
-            //    new BatchedAnimatedModelContainer(
-            //        animatedFemaleMOdel,
-            //        contentManager.Load<Texture2D>("Textures\\female_0"),
-            //        DancerType.Female);
-
-            BatchedAnimatedModelContainer bobContainer =
-             new BatchedAnimatedModelContainer(
-                 animatedBobDress,
-                 contentManager.Load<Texture2D>("Textures\\female1_0"),
-                 DancerType.Female);
-
-            BatchedAnimatedModelContainer animatedFemale2Container =
+            BatchedAnimatedModelContainer femaleContainer =
                 new BatchedAnimatedModelContainer(
-                    animatedFemale2,
-                    contentManager.Load<Texture2D>("Textures\\female2_0"),
+                    animatedFemaleMOdel,
+                    contentManager.Load<Texture2D>("Textures\\female_0"),
                     DancerType.Female);
 
+            //BatchedAnimatedModelContainer bobContainer =
+            // new BatchedAnimatedModelContainer(
+            //     animatedBobDress,
+            //     contentManager.Load<Texture2D>("Textures\\female1_0"),
+            //     DancerType.Female);
+
+            //BatchedAnimatedModelContainer animatedFemale2Container =
+            //    new BatchedAnimatedModelContainer(
+            //        animatedFemale2,
+            //        contentManager.Load<Texture2D>("Textures\\female2_0"),
+            //        DancerType.Female);
+
             _batchedAnimatedModelContainers.Add(maleContainer);
-          //  _batchedAnimatedModelContainers.Add(femaleContainer);
-            _batchedAnimatedModelContainers.Add(bobContainer);
-            _batchedAnimatedModelContainers.Add(animatedFemale2Container);
+            _batchedAnimatedModelContainers.Add(femaleContainer);
+            //_batchedAnimatedModelContainers.Add(bobContainer);
+            //_batchedAnimatedModelContainers.Add(animatedFemale2Container);
 
 
         }

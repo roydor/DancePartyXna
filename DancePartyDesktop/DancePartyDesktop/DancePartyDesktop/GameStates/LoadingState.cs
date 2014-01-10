@@ -129,7 +129,7 @@ namespace DanceParty.GameStates
             lock(_loadStateReporter)
             {
                 Vector2 loadStatusDimensions = FontManager.Instance.BangersSmall.MeasureString(_loadStateReporter.CurrentStatus);
-                Vector2 loadStatusPosition;
+                Vector2 loadStatusPosition = new Vector2();
                 loadStatusPosition.X = (_graphicsDevice.Viewport.Width - loadStatusDimensions.X) / 2;
                 loadStatusPosition.Y = _graphicsDevice.Viewport.Height - loadStatusDimensions.Y;
 
