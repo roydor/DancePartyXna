@@ -23,7 +23,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 
                 foreach (TouchLocation touchLocation in TouchPanel.GetState())
                 {
-                    if (touchLocation.State == TouchLocationState.Pressed)
+                    if (touchLocation.State == TouchLocationState.Pressed || touchLocation.State == TouchLocationState.Moved)
                     {
                         clickedLocation = touchLocation.Position;
                     }
