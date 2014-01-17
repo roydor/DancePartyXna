@@ -12,6 +12,15 @@ namespace DanceParty.Actors
 {
     public class CongaLine
     {
+        public int DrunkFactor
+        {
+            get
+            {
+                return _drunkController.GetDrunkFactor();
+            }
+        }
+
+        private DrunkController _drunkController;
         private List<Dancer> _dancers;
         private bool _stopped;
         private double _timeSinceStopped;
@@ -44,11 +53,17 @@ namespace DanceParty.Actors
                 return _dancers[_dancers.Count - 1];
             }
         }
+
+        public void AddDrink(int drinkValue)
+        {
+            _drunkController.AddDrink(drinkValue);
+        }
         
         public CongaLine(Dancer leadDancer)
         {
             _dancers = new List<Dancer>();
             _dancers.Add(leadDancer);
+            _drunkController = new DrunkController(leadDancer);
         }
 
         /// <summary>
@@ -76,17 +91,10 @@ namespace DanceParty.Actors
                 }
             }
 
+            _drunkController.Update(gameTime);
+
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
-        }
-
-        /// <summary>
-        /// Draws this congaline and 
-        /// </summary>
-        public void Draw(PerspectiveCamera camera)
-        {
-            foreach (Dancer dancer in _dancers)
-                dancer.Draw(camera);
         }
 
         public bool CollidesWithSelf()

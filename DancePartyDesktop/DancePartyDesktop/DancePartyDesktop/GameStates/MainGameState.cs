@@ -90,6 +90,8 @@ namespace DanceParty.GameStates
 
         private CongaLine _congaLine;
         private DancerEmitter _dancerEmitter;
+        private DrinkEmitter _drinkEmitter;
+        
         private CameraController _cameraController;
         private IAccelerometerWrapper _accelerometer;
         private List<Dancer> _dancers;
@@ -107,6 +109,9 @@ namespace DanceParty.GameStates
         private MainGameHUD _hud;
 
         private Model _danceFloor;
+        
+        private Drink _drink;
+
         private Vector3 _light1Direction = Vector3.Normalize(new Vector3(-1, -1, -1));
         private Vector3 _light1Color = Vector3.One * 0.8f;
 
@@ -125,6 +130,8 @@ namespace DanceParty.GameStates
 
             _dancers = new List<Dancer>();
             _dancerEmitter = new DancerEmitter();
+            _drinkEmitter = new DrinkEmitter();
+
             _accelerometer = AccelerometerFactory.GetAccelerometer();
         }
 
@@ -161,21 +168,22 @@ namespace DanceParty.GameStates
 
             loadStateReporter.CurrentStatus = "Loading DanceRoom";
             _danceFloor = _contentManager.Load<Model>("Models\\DanceRoom");
+            _drinkEmitter.LoadContent();
 
             //Instance our first Render Target to the same size as the back buffer.
             currentFrame = new RenderTarget2D(_graphicsDevice,
-                _graphicsDevice.PresentationParameters.BackBufferWidth,
+                _graphicsDevice.PresentationParameters.BackBufferWidth ,
                 _graphicsDevice.PresentationParameters.BackBufferHeight, 
                 false, 
                 _graphicsDevice.DisplayMode.Format, 
                 DepthFormat.Depth24);
 
             drunkFrame = new RenderTarget2D(_graphicsDevice,
-                _graphicsDevice.PresentationParameters.BackBufferWidth,
-                _graphicsDevice.PresentationParameters.BackBufferHeight,
+                currentFrame.Width / 4,
+                currentFrame.Height / 4,
                 false,
                 _graphicsDevice.DisplayMode.Format,
-                DepthFormat.Depth24);
+                DepthFormat.None);
 
             GC.Collect();
             _isLoaded = true;
@@ -209,12 +217,6 @@ namespace DanceParty.GameStates
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                DrunkFactor++;
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                DrunkFactor--;
-
             // Update the conga line.
             _congaLine.Update(gameTime);
 
@@ -235,8 +237,19 @@ namespace DanceParty.GameStates
                 ProcessGameOver();
             }
 
+            if (_drink != null && _congaLine.LeadDancer.CollidesWith(_drink))
+            {
+                _drink = null;
+                _congaLine.AddDrink(50);
+            }
+
+            if (_drink == null)
+                _drink = _drinkEmitter.EmitDrink();
+
+            _drink.Update(gameTime);
+
             _cameraController.Update(gameTime);
-            _hud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, DrunkFactor);
+            _hud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
         }
 
         public void CheckForAddNewDancer()
@@ -248,6 +261,9 @@ namespace DanceParty.GameStates
 
         public void CheckForLoss()
         {
+            if (_congaLine.DrunkFactor > 255)
+                GameOver();
+
             if (_congaLine.CollidesWithSelf())
                 GameOver();
 
@@ -271,13 +287,15 @@ namespace DanceParty.GameStates
 
         public void ProcessGameOver()
         {
-            if (PointerInputManager.Instance.GetClickedPosition() != null)
+            if (_congaLine.LastFallenDancer == _congaLine.TailDancer &&
+                PointerInputManager.Instance.GetClickedPosition() != null)
                 GameStateManager.Instance.PopGameState();
         }
 
         // Stop the game.
         public void GameOver()
         {
+            _congaLine.AddDrink(-_congaLine.DrunkFactor);
             _gameOverSound.Play();
             MediaPlayer.Stop();
             _congaLine.Stop();
@@ -325,8 +343,6 @@ namespace DanceParty.GameStates
             _dancers.Clear();
         }
 
-        private int DrunkFactor = 0;
-
         public void Draw(GameTime gameTime)
         {
             if (!_isLoaded)
@@ -342,16 +358,19 @@ namespace DanceParty.GameStates
             ss.AddressV = TextureAddressMode.Clamp;
 
             _graphicsDevice.Clear(Color.Black);
-            _graphicsDevice.BlendState = BlendState.Opaque;
+            _graphicsDevice.BlendState = BlendState.AlphaBlend;
             _graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _graphicsDevice.SamplerStates[0] = ss;
 
             //Draw Models and Dance Room.
             BatchedModelManager.Instance.DrawInstances(_cameraController.Camera);
             DrawDanceFloor(_cameraController.Camera);
+            _drink.Draw(_cameraController.Camera);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(drunkFrame, _graphicsDevice.Viewport.Bounds, new Color(DrunkFactor, DrunkFactor, DrunkFactor, DrunkFactor));
+            _spriteBatch.Draw(drunkFrame, 
+                _graphicsDevice.Viewport.Bounds,
+                new Color(_congaLine.DrunkFactor, _congaLine.DrunkFactor, _congaLine.DrunkFactor, _congaLine.DrunkFactor));
             _spriteBatch.End();
 
             //Re-Render our first Render Target onto a 2nd one at half the size.
@@ -360,22 +379,15 @@ namespace DanceParty.GameStates
             _spriteBatch.Draw(currentFrame, _graphicsDevice.Viewport.Bounds, Color.White);
             _spriteBatch.End();
 
-
             //Reset the Graphics Device to render to the back buffer.
             _graphicsDevice.SetRenderTarget(null);
-
-            //Render our scene to the back buffer by rendering the
-            //first Render Target which was stored at full screen resolution.
-            _spriteBatch.Begin();
-            //_spriteBatch.Draw(targets[0], _graphicsDevice.Viewport.Bounds, Color.White);
-            _spriteBatch.End();
 
             //Lastly, render our 4th Render Target which contains all of our previous
             //rendered targets scaled down.  We will draw all of them now scaled up
             //to full resolution which will cause the blur.
             _spriteBatch.Begin();
-            _spriteBatch.Draw(drunkFrame, _graphicsDevice.Viewport.Bounds, Color.White);
-            _hud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, DrunkFactor);
+            _spriteBatch.Draw(currentFrame, _graphicsDevice.Viewport.Bounds, Color.White);
+            _hud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
             _spriteBatch.End();
         }
 

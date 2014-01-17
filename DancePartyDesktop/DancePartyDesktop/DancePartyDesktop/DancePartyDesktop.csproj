@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Actors\CongaLine.cs" />
     <Compile Include="Actors\Dancer.cs" />
+    <Compile Include="Actors\DancerBehaviors\DrunkController.cs" />
     <Compile Include="Actors\DancerBehaviors\EnterFloorDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\FallingDancerBehavior.cs" />
     <Compile Include="Actors\DancerBehaviors\FollowingDancerBehavior.cs" />
@@ -91,6 +92,9 @@
     <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
     <Compile Include="Actors\DancerEmitter.cs" />
     <Compile Include="Actors\DancerFactory.cs" />
+    <Compile Include="Actors\Drink.cs" />
+    <Compile Include="Actors\DrinkEmitter.cs" />
+    <Compile Include="Actors\DrunkController.cs" />
     <Compile Include="BatchedModelManager.cs" />
     <Compile Include="Cameras\CameraController.cs" />
     <Compile Include="Cameras\CameraControllerBehaviors\BehindViewBehavior.cs" />

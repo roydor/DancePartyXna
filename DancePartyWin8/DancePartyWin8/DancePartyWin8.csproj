@@ -150,13 +150,127 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\**">
-      <Link>Content\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Animation\Base.xnb">
+      <Link>Content\Animation\Base.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music0.wma">
+      <Link>Content\Audio\Music0.wma</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music0.xnb">
+      <Link>Content\Audio\Music0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music1.wma">
+      <Link>Content\Audio\Music1.wma</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music1.xnb">
+      <Link>Content\Audio\Music1.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music2.wma">
+      <Link>Content\Audio\Music2.wma</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music2.xnb">
+      <Link>Content\Audio\Music2.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music3.wma">
+      <Link>Content\Audio\Music3.wma</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music3.xnb">
+      <Link>Content\Audio\Music3.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music4.wma">
+      <Link>Content\Audio\Music4.wma</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\Music4.xnb">
+      <Link>Content\Audio\Music4.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Audio\RecordScratch.xnb">
+      <Link>Content\Audio\RecordScratch.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\brickwall_0.xnb">
+      <Link>Content\brickwall_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\dirt_0.xnb">
+      <Link>Content\dirt_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Fonts\BangersLarge.xnb">
+      <Link>Content\Fonts\BangersLarge.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Fonts\BangersMedium.xnb">
+      <Link>Content\Fonts\BangersMedium.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Fonts\BangersSmall.xnb">
+      <Link>Content\Fonts\BangersSmall.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\hardwoodfloor_0.xnb">
+      <Link>Content\hardwoodfloor_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\DanceRoom.xnb">
+      <Link>Content\Models\DanceRoom.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\female1.xnb">
+      <Link>Content\Models\female1.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\female2.xnb">
+      <Link>Content\Models\female2.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\female_low.xnb">
+      <Link>Content\Models\female_low.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\male_low.xnb">
+      <Link>Content\Models\male_low.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Textures\female1_0.xnb">
+      <Link>Content\Textures\female1_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Textures\female2_0.xnb">
+      <Link>Content\Textures\female2_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Textures\female_0.xnb">
+      <Link>Content\Textures\female_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Textures\male_0.xnb">
+      <Link>Content\Textures\male_0.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\wood1_0.xnb">
+      <Link>Content\wood1_0.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\DancePartyDesktop\DancePartyDesktop\DancePartyDesktop\bin\x86\Debug\Content\Models\drink2.xnb">
+      <Link>Content\Models\drink2.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

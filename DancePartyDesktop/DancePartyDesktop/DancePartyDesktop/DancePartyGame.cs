@@ -50,9 +50,9 @@ namespace DanceParty
             _instance = this;
             this.IsMouseVisible = true;
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
-            GraphicsDeviceManager.IsFullScreen = true;
+            //GraphicsDeviceManager.IsFullScreen = true;
 //            GraphicsDeviceManager.PreferredBackBufferWidth = 800;
-  //          GraphicsDeviceManager.PreferredBackBufferWidth = 480;
+//            GraphicsDeviceManager.PreferredBackBufferHeight = 480;
             _gameStateManager = GameStateManager.Instance;
             _fpsTracker = new FPSTracker();
 

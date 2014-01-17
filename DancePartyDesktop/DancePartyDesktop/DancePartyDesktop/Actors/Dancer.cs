@@ -61,10 +61,6 @@ namespace DanceParty.Actors
         /// </summary>
         private IDancerBehavior _dancerBehavior;
 
-        /// <summary>
-        /// All the accessories this dancer is wearing.
-        /// </summary>
-        private List<Accessory> _accessories;
 
         private AnimatedModelInstance _modelInstance;
 
@@ -72,8 +68,6 @@ namespace DanceParty.Actors
         {
             _modelInstance = modelInstance;
             _animationPlayer = new AnimationPlayer(AnimationManager.Instance.GetAnimationData());
-
-            _accessories = new List<Accessory>();
 
             Position = Vector3.Zero;
             Forward = Vector3.UnitZ;
@@ -84,10 +78,6 @@ namespace DanceParty.Actors
             _modelInstance.SkinTransforms = _animationPlayer.GetSkinTransforms();
         }
 
-        public void AddAccessory(Accessory accessory)
-        {
-            _accessories.Add(accessory);
-        }
 
         public void Update(GameTime gameTime)
         {
@@ -100,72 +90,6 @@ namespace DanceParty.Actors
             _animationPlayer.Update(gameTime.ElapsedGameTime, true, ModelAdjustment * _worldMatrix);
             _modelInstance.SkinTransforms = _animationPlayer.GetSkinTransforms();
         }
-
-        /// <summary>
-        /// Draws this dancer to the screen using the passed in camera.
-        /// </summary>
-        public void Draw(PerspectiveCamera camera)
-        {
-        }
-        //    // Get the transformed positions of all the bones.
-        //    Matrix[] bones = _animationPlayer.GetSkinTransforms();
-        //    Matrix[] worldBones = _animationPlayer.GetWorldTransforms();
-
-        //    // Draw the model. A model can have multiple meshes, so loop.
-        //    foreach (ModelMesh mesh in _model.Meshes)
-        //    {
-        //        foreach (SkinnedEffect effect in mesh.Effects)
-        //        {
-        //            effect.EnableDefaultLighting();
-
-        //            effect.SetBoneTransforms(bones);
-        //            effect.World = _worldMatrix;
-
-        //            effect.View = camera.ViewMatrix;
-        //            effect.Projection = camera.ProjectionMatrix;
-
-        //            effect.Texture = _skin;
-        //        }
-
-        //        // Draw the mesh, using the effects set above.
-        //        mesh.Draw();
-        //    }
-
-        //    /*
-        //    foreach (Accessory accessory in _accessories)
-        //    {
-        //        // Accessory may have no model, so nothing to draw.
-        //        // (Hair?)
-        //        if (accessory.Model == null)
-        //            continue;
-
-        //        // Which bone is it attached to?
-        //        Matrix boneTransform = _animationPlayer.GetWorldTransformForBone(accessory.AttachedToBone);
-
-        //        // Draw the accessory
-        //        foreach (ModelMesh mesh in accessory.Model.Meshes)
-        //        {
-        //            foreach (BasicEffect effect in mesh.Effects)
-        //            {
-        //                effect.EnableDefaultLighting();
-
-        //                // Attach it to the correct bone's world transform.
-        //                effect.World = boneTransform * _worldMatrix;
-
-        //                effect.View = camera.ViewMatrix;
-        //                effect.Projection = camera.ProjectionMatrix;
-
-        //                effect.TextureEnabled = true;
-        //                effect.Texture = accessory.Skin;
-        //            }
-
-        //            // Draw the mesh, using the effects set above.
-        //            mesh.Draw();
-        //        }
-            
-
-        //    }*/
-        //}
 
         public void SetAnimation(string animationName)
         {
@@ -185,6 +109,11 @@ namespace DanceParty.Actors
         public bool CollidesWith(Dancer dancer)
         {
             return Vector3.DistanceSquared(Position, dancer.Position) < 10000;
+        }
+
+        public bool CollidesWith(Drink drink)
+        {
+            return Vector3.DistanceSquared(Position, drink.Position) < 10000;
         }
 
         public bool IsHostile()

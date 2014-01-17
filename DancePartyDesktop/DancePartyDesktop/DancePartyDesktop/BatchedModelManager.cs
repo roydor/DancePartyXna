@@ -68,10 +68,10 @@ namespace DanceParty
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {   
             //// Create the animated models and process them.
-            //BatchRenderedAnimatedModel animatedMaleModel = 
-            //    new BatchRenderedAnimatedModel(
-            //        graphicsDevice, 
-            //        contentManager.Load<Model>("Models\\male_low"));
+            BatchRenderedAnimatedModel animatedMaleModel =
+                new BatchRenderedAnimatedModel(
+                    graphicsDevice,
+                    contentManager.Load<Model>("Models\\male_low"));
 
             //BatchRenderedAnimatedModel animatedFemaleMOdel =
             //    new BatchRenderedAnimatedModel(
@@ -89,11 +89,11 @@ namespace DanceParty
                     contentManager.Load<Model>("Models\\female2"));
 
             // Create instance containers to group skins with the models.
-            //BatchedAnimatedModelContainer maleContainer =
-            //    new BatchedAnimatedModelContainer(
-            //        animatedMaleModel,
-            //        contentManager.Load<Texture2D>("Textures\\male_0"),
-            //        DancerType.Male);
+            BatchedAnimatedModelContainer maleContainer =
+                new BatchedAnimatedModelContainer(
+                    animatedMaleModel,
+                    contentManager.Load<Texture2D>("Textures\\male_0"),
+                    DancerType.Male);
 
             //BatchedAnimatedModelContainer femaleContainer =
             //    new BatchedAnimatedModelContainer(
@@ -113,7 +113,7 @@ namespace DanceParty
                     contentManager.Load<Texture2D>("Textures\\female2_0"),
                     DancerType.Female);
 
-            //_batchedAnimatedModelContainers.Add(maleContainer);
+            _batchedAnimatedModelContainers.Add(maleContainer);
             //_batchedAnimatedModelContainers.Add(femaleContainer);
             _batchedAnimatedModelContainers.Add(bobContainer);
             _batchedAnimatedModelContainers.Add(animatedFemale2Container);
