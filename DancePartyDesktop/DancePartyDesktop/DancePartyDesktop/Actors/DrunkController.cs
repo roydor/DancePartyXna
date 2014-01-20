@@ -56,6 +56,8 @@ namespace DanceParty.Actors
             int prevFactor = GetDrunkFactor();
             _currentDrunkFactor = MathHelper.Lerp(_currentDrunkFactor, (float)_desiredFactor, dt / 2);
 
+            float drunkRatio = _currentDrunkFactor / 255;
+
             // Play a sound if it increased.
             if (prevFactor < GetDrunkFactor())
             {
@@ -74,8 +76,9 @@ namespace DanceParty.Actors
 
 
             // Mess with the camera if you're drunk
-            //_camera.FieldOfViewScale = 1 + (float)(0.3 * Math.Sin(0.5 * _drunkTime));
-            //_camera.AspectScale = 1 + (float)(0.3 * Math.Cos(2*_drunkTime));
+            _camera.Up = Vector3.Transform(Vector3.Up, Matrix.CreateRotationZ((float)(0.3f * drunkRatio * Math.Cos(_drunkTime))));
+            _camera.FieldOfViewScale = 1 + (float)(0.1 * drunkRatio * Math.Sin(0.5 * _drunkTime));
+            _camera.AspectScale = 1 + (float)(0.1 * drunkRatio * Math.Cos(2 * _drunkTime));
 
 
             _leadDancer.Forward = Vector3.Transform(
