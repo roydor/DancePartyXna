@@ -397,7 +397,7 @@ namespace DanceParty.GameStates
         public void ProcessGameOver()
         {
             // Let you continue if the message says so, or the full line has fallen.
-            if ((_gameOverHud.ShowTapMessage) ||
+            if ((_gameOverHud.ShowTapMessage ||
                 (_congaLine.LastFallenDancer == _congaLine.TailDancer)) &&
                 PointerInputManager.Instance.GetClickedPosition() != null)
                 GameStateManager.Instance.PopGameState();
