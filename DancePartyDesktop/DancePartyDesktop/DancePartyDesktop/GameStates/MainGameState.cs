@@ -149,11 +149,12 @@ namespace DanceParty.GameStates
             AnimationManager.Instance.LoadContent();
 
             loadStateReporter.CurrentStatus = "Creating CongaLine";
-            Dancer leader = DancerFactory.Instance.GetRandomDancer();
-            leader.SetDancerBehavior(new LeadDancerBehavior(leader));
-            _congaLine = new CongaLine(leader);
 
             PerspectiveCamera camera = new PerspectiveCamera(_graphicsDevice);
+
+            Dancer leader = DancerFactory.Instance.GetRandomDancer();
+            leader.SetDancerBehavior(new LeadDancerBehavior(leader));
+            _congaLine = new CongaLine(leader, camera);
 
             _cameraController = new CameraController(camera);
             _cameraController.SetCameraBehavior(new BehindViewBehavior(camera, _congaLine.LeadDancer));
@@ -196,7 +197,7 @@ namespace DanceParty.GameStates
         public void StartGame()
         {
             _beginGame = false;
-            Reset();
+           // Reset();
             MediaPlayer.Stop();
             MediaPlayer.IsRepeating = false;
             MediaPlayer.Play(_music);
@@ -316,9 +317,7 @@ namespace DanceParty.GameStates
             Vector2? click = PointerInputManager.Instance.GetClickedPosition();
 
             if (click.HasValue)
-            {
                 rotationAngle = -KeyboardRotationSpeed * (2 * click.Value.X - _graphicsDevice.Viewport.Width) / _graphicsDevice.Viewport.Width;
-            }
 
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
@@ -331,17 +330,17 @@ namespace DanceParty.GameStates
         }
 
         // Reset the game.
-        public void Reset()
-        {
-            if (!_isLoaded)
-                return;
+        //public void Reset()
+        //{
+        //    if (!_isLoaded)
+        //        return;
 
-            BatchedModelManager.Instance.ClearInstances();
-            _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
-            _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
-            _cameraController.SetCameraBehavior(new BehindViewBehavior(_cameraController.Camera, _congaLine.LeadDancer));
-            _dancers.Clear();
-        }
+        //    BatchedModelManager.Instance.ClearInstances();
+        //    _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
+        //    _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
+        //    _cameraController.SetCameraBehavior(new BehindViewBehavior(_cameraController.Camera, _congaLine.LeadDancer));
+        //    _dancers.Clear();
+        //}
 
         public void Draw(GameTime gameTime)
         {

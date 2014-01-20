@@ -58,6 +58,9 @@ namespace DanceParty.Cameras
             } 
         }
 
+        public float AspectScale = 1f;
+        public float FieldOfViewScale = 1f;
+
         public GraphicsDevice GraphicsDevice;
 
         /// <summary>
@@ -75,12 +78,10 @@ namespace DanceParty.Cameras
 
             _projectionMatrix = 
                 Matrix.CreatePerspectiveFieldOfView(
-                    PerspectiveFieldOfView,
-                    GraphicsDevice.Viewport.AspectRatio,
+                    PerspectiveFieldOfView * FieldOfViewScale,
+                    GraphicsDevice.Viewport.AspectRatio * AspectScale,
                     NearPlane,
                     FarPlane);  
-
-            // _projectionMatrix = Matrix.CreateOrthographic(30.0f, 30.0f, NearPlane, FarPlane);
 
             _viewMatrix = Matrix.CreateLookAt(Position, LookAt, Up);
             _rotationMatrix = Matrix.Identity;
@@ -100,8 +101,8 @@ namespace DanceParty.Cameras
             Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z, out _rotationMatrix);
 
             Matrix.CreatePerspectiveFieldOfView(
-                PerspectiveFieldOfView,
-                GraphicsDevice.Viewport.AspectRatio,
+                PerspectiveFieldOfView * FieldOfViewScale,
+                (float)(GraphicsDevice.Viewport.AspectRatio * AspectScale),
                 NearPlane,
                 FarPlane,
                 out _projectionMatrix);

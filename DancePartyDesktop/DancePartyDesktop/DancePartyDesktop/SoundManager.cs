@@ -14,6 +14,7 @@ namespace DanceParty
         private List<Song> _songs;
 
         private SoundEffect _scratchSound;
+        private SoundEffect _popSound;
 
         private ContentManager _contentManager;
         private SoundManager(ContentManager contentManager)
@@ -31,6 +32,7 @@ namespace DanceParty
             _songs.Add(_contentManager.Load<Song>("Audio\\Music4"));
 
             _scratchSound = _contentManager.Load<SoundEffect>("Audio\\RecordScratch");
+            _popSound = _contentManager.Load<SoundEffect>("Audio\\Pop");
         }
 
         public Song GetRandomSong()
@@ -43,6 +45,11 @@ namespace DanceParty
             return _scratchSound.CreateInstance();
         }
 
+        public SoundEffectInstance GetPopSoundEffect()
+        {
+            return _popSound.CreateInstance();
+        }
+
         private static SoundManager _instance;
         public static SoundManager Instance
         {
@@ -53,3 +60,4 @@ namespace DanceParty
         }
     }
 }
+

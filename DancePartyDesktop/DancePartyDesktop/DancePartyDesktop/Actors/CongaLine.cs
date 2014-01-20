@@ -59,11 +59,11 @@ namespace DanceParty.Actors
             _drunkController.AddDrink(drinkValue);
         }
         
-        public CongaLine(Dancer leadDancer)
+        public CongaLine(Dancer leadDancer, PerspectiveCamera camera)
         {
             _dancers = new List<Dancer>();
             _dancers.Add(leadDancer);
-            _drunkController = new DrunkController(leadDancer);
+            _drunkController = new DrunkController(leadDancer, camera);
         }
 
         /// <summary>

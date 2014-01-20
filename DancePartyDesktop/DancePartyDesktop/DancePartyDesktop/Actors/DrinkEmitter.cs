@@ -22,10 +22,11 @@ namespace DanceParty.Actors
         public Drink EmitDrink()
         {
             float angle = ((float)_random.NextDouble()) * MathHelper.TwoPi;
+            float radius = (float)  (_random.NextDouble() * 1000);
             Drink newDrink = new Drink(_drinkModel);
 
-            newDrink.Position.X = 1000 * (float)Math.Sin(angle);
-            newDrink.Position.Z = 1000 * (float)Math.Cos(angle);
+            newDrink.Position.X = radius * (float)Math.Sin(angle);
+            newDrink.Position.Z = radius * (float)Math.Cos(angle);
 
             return newDrink;
         }
