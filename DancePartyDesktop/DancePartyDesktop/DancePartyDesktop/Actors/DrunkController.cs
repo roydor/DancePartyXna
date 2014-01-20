@@ -17,13 +17,7 @@ namespace DanceParty.Actors
         private SoundEffectInstance _sound;
         private PerspectiveCamera _camera;
 
-        public float GetDrunkPeriod
-        {
-            get
-            {
-                return _drunkTime;
-            }
-        }
+        private float _secondTimer = 0;
 
         public int GetDrunkFactor()
         {
@@ -67,19 +61,18 @@ namespace DanceParty.Actors
             }
 
             _drunkTime += dt;
+            _secondTimer += dt;
 
-            if (_drunkTime > MathHelper.TwoPi)
+            if (_secondTimer > 1)
             {
-                _desiredFactor -= 6;
-                _drunkTime -= MathHelper.TwoPi;
+                _desiredFactor--;
+                _secondTimer = 0;
             }
 
-
             // Mess with the camera if you're drunk
-            _camera.Up = Vector3.Transform(Vector3.Up, Matrix.CreateRotationZ((float)(0.3f * drunkRatio * Math.Cos(_drunkTime))));
+            _camera.Up = Vector3.Transform(Vector3.Up, Matrix.CreateRotationZ((float)(-0.3f * drunkRatio * Math.Sin(0.8 * _drunkTime))));
             _camera.FieldOfViewScale = 1 + (float)(0.1 * drunkRatio * Math.Sin(0.5 * _drunkTime));
             _camera.AspectScale = 1 + (float)(0.1 * drunkRatio * Math.Cos(2 * _drunkTime));
-
 
             _leadDancer.Forward = Vector3.Transform(
                 _leadDancer.Forward,

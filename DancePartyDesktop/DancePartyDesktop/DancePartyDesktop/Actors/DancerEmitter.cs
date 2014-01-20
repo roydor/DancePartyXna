@@ -22,6 +22,10 @@ namespace DanceParty.Actors
             newDancer.Position.X = 1300 * (float)Math.Sin(angle);
             newDancer.Position.Z = 1300 * (float)Math.Cos(angle);
 
+            // Start them in the doorway.
+            //newDancer.Position.X = 1600;
+            //newDancer.Position.Z = -1300;
+
             newDancer.SetDancerBehavior(new EnterFloorDancerBehavior(newDancer));
 
             return newDancer;

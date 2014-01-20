@@ -21,6 +21,94 @@ using DanceParty.Utilities.Threading;
 
 namespace DanceParty.GameStates
 {
+    public class GameOverMessage
+    {
+        private string _message;
+        private Vector2 _messageDimensions;
+        private Vector2 _messagePosition;
+        private Vector2 _messageDestination;
+
+        private string _description;
+        private Vector2 _descriptionDimensions;
+        private Vector2 _descriptionPosition;
+        private Vector2 _descriptionDestination;
+
+        private string _tapMessage;
+        private Vector2 _tapMessageDimensions;
+        private Vector2 _tapMessagePosition;
+        private Vector2 _tapMessageDestination;
+
+        private float _velocity;
+        private float _totalTime;
+
+        public bool ShowTapMessage;
+        
+        private GraphicsDevice _graphicsDevice;
+
+        public GameOverMessage(GraphicsDevice graphicsDevice, string message, string description)
+        {
+            _graphicsDevice = graphicsDevice;
+            _message = message;
+            _description = description;
+
+            _messageDimensions = FontManager.Instance.BangersLarge.MeasureString(_message);
+            _descriptionDimensions = FontManager.Instance.BangersSmall.MeasureString(_description);
+
+            _messagePosition.Y = -_messageDimensions.Y;
+            _descriptionPosition.Y = -_descriptionDestination.Y;
+
+            //Set the message to finish 3/5 down the screen.
+            _messagePosition.X = (_graphicsDevice.Viewport.Width - _messageDimensions.X) / 2;
+            _messageDestination.X = (_graphicsDevice.Viewport.Width - _messageDimensions.X) / 2;
+            _messageDestination.Y = 3 * (_graphicsDevice.Viewport.Height / 5) - (_messageDimensions.Y / 2);
+
+            // Set the description to fall all the way to the bottom.
+            _descriptionPosition.X = (_graphicsDevice.Viewport.Width - _descriptionDimensions.X) / 2;
+            _descriptionDestination.X = (_graphicsDevice.Viewport.Width - _descriptionDimensions.X) / 2;
+            _descriptionDestination.Y = _messageDestination.Y + _messageDimensions.Y;
+
+            _tapMessage = "(... Tap to continue ...)";
+            _tapMessageDimensions = FontManager.Instance.BangersSmall.MeasureString(_tapMessage);
+            _tapMessagePosition.X = (_graphicsDevice.Viewport.Width - _tapMessageDimensions.X) / 2;
+            _tapMessageDestination.X =  _tapMessagePosition.X;
+            _tapMessageDestination.Y = _descriptionDestination.Y + _descriptionDimensions.Y;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            float dt = (float)(gameTime.ElapsedGameTime.TotalSeconds);
+            _velocity += 10;
+            _totalTime += dt;
+
+            float dist = _velocity * dt;
+
+            _messagePosition.Y += dist;
+            _descriptionPosition.Y += dist;
+            _tapMessagePosition.Y += dist;
+
+            if (_messagePosition.Y > _messageDestination.Y)
+            {
+                _messagePosition.Y = _messageDestination.Y;
+                _descriptionPosition.Y = _descriptionDestination.Y;
+                _tapMessagePosition.Y = _tapMessageDestination.Y;
+
+                _velocity *= -0.5f;
+            }
+
+            if (_totalTime > 5)
+                ShowTapMessage = true;
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(FontManager.Instance.BangersLarge, _message, _messagePosition, Color.Yellow);
+            spriteBatch.DrawString(FontManager.Instance.BangersSmall, _description, _descriptionPosition, Color.Yellow);
+
+            if (ShowTapMessage)
+                spriteBatch.DrawString(FontManager.Instance.BangersSmall, _tapMessage, _tapMessagePosition, Color.Yellow);
+        }
+    }
+
     public class MainGameHUD
     {
         private Vector2 _dancersCollectedPosition;
@@ -106,17 +194,12 @@ namespace DanceParty.GameStates
         private Song _music;
         private SoundEffectInstance _gameOverSound;
 
-        private MainGameHUD _hud;
+        private MainGameHUD _mainHud;
+        private GameOverMessage _gameOverHud;
 
         private Model _danceFloor;
         
         private Drink _drink;
-
-        private Vector3 _light1Direction = Vector3.Normalize(new Vector3(-1, -1, -1));
-        private Vector3 _light1Color = Vector3.One * 0.8f;
-
-        private Vector3 _light2Direction = Vector3.Normalize(new Vector3(1, -1, 1));
-        private Vector3 _light2Color = Vector3.One * 0.2f;
 
         // Radians per second.
         private const float KeyboardRotationSpeed = 1.0f;
@@ -144,6 +227,7 @@ namespace DanceParty.GameStates
             _isLoaded = false;
             loadStateReporter.CurrentStatus = "Loading Models";
             BatchedModelManager.Instance.LoadContent(_contentManager, _graphicsDevice);
+            BatchedModelManager.Instance.ClearInstances();
 
             loadStateReporter.CurrentStatus = "Loading Animation";
             AnimationManager.Instance.LoadContent();
@@ -165,7 +249,7 @@ namespace DanceParty.GameStates
             _music = SoundManager.Instance.GetRandomSong();
             _gameOverSound = SoundManager.Instance.GetRecordScratchInstance();
 
-            _hud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
+            _mainHud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
 
             loadStateReporter.CurrentStatus = "Loading DanceRoom";
             _danceFloor = _contentManager.Load<Model>("Models\\DanceRoom");
@@ -199,6 +283,7 @@ namespace DanceParty.GameStates
             _beginGame = false;
            // Reset();
             MediaPlayer.Stop();
+            MediaPlayer.Volume = 0.6f;
             MediaPlayer.IsRepeating = false;
             MediaPlayer.Play(_music);
         }
@@ -232,12 +317,21 @@ namespace DanceParty.GameStates
                 CheckForAddDancer();
                 CheckForLoss();
                 CheckForAddNewDancer();
+                _mainHud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
             }
             else
             {
+                _gameOverHud.Update(gameTime);
                 ProcessGameOver();
             }
 
+            UpdateDrinks(gameTime);
+
+            _cameraController.Update(gameTime);
+        }
+
+        public void UpdateDrinks(GameTime gameTime)
+        {
             if (_drink != null && _congaLine.LeadDancer.CollidesWith(_drink))
             {
                 _drink = null;
@@ -248,9 +342,6 @@ namespace DanceParty.GameStates
                 _drink = _drinkEmitter.EmitDrink();
 
             _drink.Update(gameTime);
-
-            _cameraController.Update(gameTime);
-            _hud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
         }
 
         public void CheckForAddNewDancer()
@@ -263,14 +354,31 @@ namespace DanceParty.GameStates
         public void CheckForLoss()
         {
             if (_congaLine.DrunkFactor > 255)
+            {
+                _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You drank too much!");
                 GameOver();
+            }
 
             if (_congaLine.CollidesWithSelf())
+            {
+                _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You bumped into your conga line!");
                 GameOver();
+            }
 
             // Out of bounds?
             if (_congaLine.LeadDancer.Position.Length() > DanceFloorBoundary)
+            {
+                _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You left the dance floor!");
                 GameOver();
+            }
+
+            TimeSpan timeRemaining = _music.Duration - MediaPlayer.PlayPosition;
+
+            if (timeRemaining.Seconds == 0 && timeRemaining.Minutes == 0)
+            {
+                _gameOverHud = new GameOverMessage(_graphicsDevice, "You did it!", "You're the champion!");
+                GameOver();
+            }
         }
 
         public void CheckForAddDancer()
@@ -288,7 +396,9 @@ namespace DanceParty.GameStates
 
         public void ProcessGameOver()
         {
-            if (_congaLine.LastFallenDancer == _congaLine.TailDancer &&
+            // Let you continue if the message says so, or the full line has fallen.
+            if ((_gameOverHud.ShowTapMessage) ||
+                (_congaLine.LastFallenDancer == _congaLine.TailDancer)) &&
                 PointerInputManager.Instance.GetClickedPosition() != null)
                 GameStateManager.Instance.PopGameState();
         }
@@ -328,19 +438,6 @@ namespace DanceParty.GameStates
 
             return rotationAngle;
         }
-
-        // Reset the game.
-        //public void Reset()
-        //{
-        //    if (!_isLoaded)
-        //        return;
-
-        //    BatchedModelManager.Instance.ClearInstances();
-        //    _congaLine = new CongaLine(DancerFactory.Instance.GetRandomDancer());
-        //    _congaLine.LeadDancer.SetDancerBehavior(new LeadDancerBehavior(_congaLine.LeadDancer));
-        //    _cameraController.SetCameraBehavior(new BehindViewBehavior(_cameraController.Camera, _congaLine.LeadDancer));
-        //    _dancers.Clear();
-        //}
 
         public void Draw(GameTime gameTime)
         {
@@ -386,7 +483,13 @@ namespace DanceParty.GameStates
             //to full resolution which will cause the blur.
             _spriteBatch.Begin();
             _spriteBatch.Draw(currentFrame, _graphicsDevice.Viewport.Bounds, Color.White);
-            _hud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
+
+
+            if (!_isGameOver)
+                _mainHud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
+            else
+                _gameOverHud.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
@@ -397,20 +500,9 @@ namespace DanceParty.GameStates
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.World = Dancer.ModelAdjustment;
-
                     effect.Projection = camera.ProjectionMatrix;
                     effect.View = camera.ViewMatrix;
-
-                    effect.LightingEnabled = true;
                     effect.EnableDefaultLighting();
-
-                    effect.DirectionalLight0.Direction = _light1Direction;
-                    effect.DirectionalLight0.DiffuseColor = _light1Color;
-                    effect.DirectionalLight0.SpecularColor = Vector3.Zero;
-
-                    effect.DirectionalLight1.Direction = _light2Direction;
-                    effect.DirectionalLight1.DiffuseColor = _light2Color;
-                    effect.DirectionalLight1.SpecularColor = Vector3.Zero;
                 }
 
                 mesh.Draw();
