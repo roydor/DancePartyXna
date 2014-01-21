@@ -21,150 +21,6 @@ using DanceParty.Utilities.Threading;
 
 namespace DanceParty.GameStates
 {
-    public class GameOverMessage
-    {
-        private string _message;
-        private Vector2 _messageDimensions;
-        private Vector2 _messagePosition;
-        private Vector2 _messageDestination;
-
-        private string _description;
-        private Vector2 _descriptionDimensions;
-        private Vector2 _descriptionPosition;
-        private Vector2 _descriptionDestination;
-
-        private string _tapMessage;
-        private Vector2 _tapMessageDimensions;
-        private Vector2 _tapMessagePosition;
-        private Vector2 _tapMessageDestination;
-
-        private float _velocity;
-        private float _totalTime;
-
-        public bool ShowTapMessage;
-        
-        private GraphicsDevice _graphicsDevice;
-
-        public GameOverMessage(GraphicsDevice graphicsDevice, string message, string description)
-        {
-            _graphicsDevice = graphicsDevice;
-            _message = message;
-            _description = description;
-
-            _messageDimensions = FontManager.Instance.BangersLarge.MeasureString(_message);
-            _descriptionDimensions = FontManager.Instance.BangersSmall.MeasureString(_description);
-
-            _messagePosition.Y = -_messageDimensions.Y;
-            _descriptionPosition.Y = -_descriptionDestination.Y;
-
-            //Set the message to finish 3/5 down the screen.
-            _messagePosition.X = (_graphicsDevice.Viewport.Width - _messageDimensions.X) / 2;
-            _messageDestination.X = (_graphicsDevice.Viewport.Width - _messageDimensions.X) / 2;
-            _messageDestination.Y = 3 * (_graphicsDevice.Viewport.Height / 5) - (_messageDimensions.Y / 2);
-
-            // Set the description to fall all the way to the bottom.
-            _descriptionPosition.X = (_graphicsDevice.Viewport.Width - _descriptionDimensions.X) / 2;
-            _descriptionDestination.X = (_graphicsDevice.Viewport.Width - _descriptionDimensions.X) / 2;
-            _descriptionDestination.Y = _messageDestination.Y + _messageDimensions.Y;
-
-            _tapMessage = "(... Tap to continue ...)";
-            _tapMessageDimensions = FontManager.Instance.BangersSmall.MeasureString(_tapMessage);
-            _tapMessagePosition.X = (_graphicsDevice.Viewport.Width - _tapMessageDimensions.X) / 2;
-            _tapMessageDestination.X =  _tapMessagePosition.X;
-            _tapMessageDestination.Y = _descriptionDestination.Y + _descriptionDimensions.Y;
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            float dt = (float)(gameTime.ElapsedGameTime.TotalSeconds);
-            _velocity += 10;
-            _totalTime += dt;
-
-            float dist = _velocity * dt;
-
-            _messagePosition.Y += dist;
-            _descriptionPosition.Y += dist;
-            _tapMessagePosition.Y += dist;
-
-            if (_messagePosition.Y > _messageDestination.Y)
-            {
-                _messagePosition.Y = _messageDestination.Y;
-                _descriptionPosition.Y = _descriptionDestination.Y;
-                _tapMessagePosition.Y = _tapMessageDestination.Y;
-
-                _velocity *= -0.5f;
-            }
-
-            if (_totalTime > 5)
-                ShowTapMessage = true;
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.DrawString(FontManager.Instance.BangersLarge, _message, _messagePosition, Color.Yellow);
-            spriteBatch.DrawString(FontManager.Instance.BangersSmall, _description, _descriptionPosition, Color.Yellow);
-
-            if (ShowTapMessage)
-                spriteBatch.DrawString(FontManager.Instance.BangersSmall, _tapMessage, _tapMessagePosition, Color.Yellow);
-        }
-    }
-
-    public class MainGameHUD
-    {
-        private Vector2 _dancersCollectedPosition;
-        private Vector2 _timeRemainingPosition;
-        private Vector2 _drunkFactorPosition;
-
-        private GraphicsDevice _graphicsDevice;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _font;
-
-        public MainGameHUD(GraphicsDevice device, SpriteBatch spriteBatch, SpriteFont spriteFont)
-        {
-            _graphicsDevice = device;
-            _spriteBatch = spriteBatch;
-            _font = spriteFont;
-        }
-
-        private string GetHumanReadableTime(TimeSpan timeSpan)
-        {
-            int minutes = timeSpan.Minutes;
-            int seconds = timeSpan.Seconds;
-
-            if (seconds < 10)
-                return minutes + ":0" + seconds;
-            else
-                return minutes + ":" + seconds;
-        }
-
-        // Dancers Collected centered at 1/4th the screen
-        // Time remaining centered at 3/4th the screen
-        public void Update(TimeSpan timeRemaining, int dancersCollected, int drunkFactor)
-        {
-            Vector2 dancersCollectedMeasurement = _font.MeasureString(dancersCollected.ToString());
-            Vector2 remainingTimeMeasurement = _font.MeasureString(GetHumanReadableTime(timeRemaining));
-            Vector2 drunkFactorMeasurement = _font.MeasureString(drunkFactor.ToString());
-
-            _dancersCollectedPosition.X = (_graphicsDevice.Viewport.Width / 4) - (dancersCollectedMeasurement.X / 2);
-            _dancersCollectedPosition.Y = 0;
-
-            _timeRemainingPosition.X = (3 *_graphicsDevice.Viewport.Width / 4) - (remainingTimeMeasurement.X / 2);
-            _timeRemainingPosition.Y = 0;
-
-            _dancersCollectedPosition.X = (_graphicsDevice.Viewport.Width / 4) - (dancersCollectedMeasurement.X / 2);
-            _dancersCollectedPosition.Y = 0;
-
-            _drunkFactorPosition.X = (2 * _graphicsDevice.Viewport.Width / 4) - (remainingTimeMeasurement.X / 2);
-        }
-
-        public void Draw(TimeSpan timeRemaining, int dancersCollected, int drunkFactor)
-        {
-            _spriteBatch.DrawString(_font, dancersCollected.ToString(), _dancersCollectedPosition, Color.Yellow);
-            _spriteBatch.DrawString(_font, GetHumanReadableTime(timeRemaining), _timeRemainingPosition, Color.Yellow);
-            _spriteBatch.DrawString(_font, drunkFactor.ToString(), _drunkFactorPosition, Color.Yellow);
-        }
-    }
-
     public class MainGameState : IGameState
     {
         #region Dependencies
@@ -192,14 +48,16 @@ namespace DanceParty.GameStates
         private bool _isGameOver = false;
 
         private Song _music;
-        private SoundEffectInstance _gameOverSound;
+        private SoundEffectInstance _loseSound;
+        private SoundEffectInstance _winSound;
 
-        private MainGameHUD _mainHud;
+        private MainGameHud _mainHud;
         private GameOverMessage _gameOverHud;
 
         private Model _danceFloor;
-        
         private Drink _drink;
+
+        private ScoreComponent _score;
 
         // Radians per second.
         private const float KeyboardRotationSpeed = 1.0f;
@@ -247,9 +105,10 @@ namespace DanceParty.GameStates
 
             loadStateReporter.CurrentStatus = "Requesting DJ to play a song";
             _music = SoundManager.Instance.GetRandomSong();
-            _gameOverSound = SoundManager.Instance.GetRecordScratchInstance();
+            _loseSound = SoundManager.Instance.GetRecordScratchInstance();
+            _winSound = SoundManager.Instance.GetApplauseSoundEffect();
 
-            _mainHud = new MainGameHUD(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
+            _mainHud = new MainGameHud(_graphicsDevice, _spriteBatch, FontManager.Instance.BangersMedium);
 
             loadStateReporter.CurrentStatus = "Loading DanceRoom";
             _danceFloor = _contentManager.Load<Model>("Models\\DanceRoom");
@@ -269,6 +128,8 @@ namespace DanceParty.GameStates
                 false,
                 _graphicsDevice.DisplayMode.Format,
                 DepthFormat.None);
+
+            _score = new ScoreComponent();
 
             GC.Collect();
             _isLoaded = true;
@@ -299,6 +160,8 @@ namespace DanceParty.GameStates
             if (_beginGame)
                 StartGame();
 
+            _score.Update(gameTime);
+
             // Update dancers on the floor.
             foreach (Dancer dancer in _dancers)
                 dancer.Update(gameTime);
@@ -317,7 +180,7 @@ namespace DanceParty.GameStates
                 CheckForAddDancer();
                 CheckForLoss();
                 CheckForAddNewDancer();
-                _mainHud.Update(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
+                _mainHud.Update(_music.Duration - MediaPlayer.PlayPosition, _score.Score, _congaLine.DrunkFactor);
             }
             else
             {
@@ -336,6 +199,7 @@ namespace DanceParty.GameStates
             {
                 _drink = null;
                 _congaLine.AddDrink(50);
+                _score.AddPoints(50);
             }
 
             if (_drink == null)
@@ -353,23 +217,23 @@ namespace DanceParty.GameStates
 
         public void CheckForLoss()
         {
-            if (_congaLine.DrunkFactor > 255)
+            if (_congaLine.DrunkFactor >= 255)
             {
                 _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You drank too much!");
-                GameOver();
+                GameOver(false);
             }
 
             if (_congaLine.CollidesWithSelf())
             {
                 _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You bumped into your conga line!");
-                GameOver();
+                GameOver(false);
             }
 
             // Out of bounds?
             if (_congaLine.LeadDancer.Position.Length() > DanceFloorBoundary)
             {
                 _gameOverHud = new GameOverMessage(_graphicsDevice, "Game Over", "You left the dance floor!");
-                GameOver();
+                GameOver(false);
             }
 
             TimeSpan timeRemaining = _music.Duration - MediaPlayer.PlayPosition;
@@ -377,7 +241,7 @@ namespace DanceParty.GameStates
             if (timeRemaining.Seconds == 0 && timeRemaining.Minutes == 0)
             {
                 _gameOverHud = new GameOverMessage(_graphicsDevice, "You did it!", "You're the champion!");
-                GameOver();
+                GameOver(true);
             }
         }
 
@@ -390,6 +254,7 @@ namespace DanceParty.GameStates
                 {
                     _congaLine.AppendDancer(_dancers[i]);
                     _dancers.RemoveAt(i--);
+                    _score.AddPoints((int)Math.Round(100 * (1 + _congaLine.DrunkRatio)));
                 }
             }
         }
@@ -404,10 +269,15 @@ namespace DanceParty.GameStates
         }
 
         // Stop the game.
-        public void GameOver()
+        public void GameOver(bool win)
         {
             _congaLine.AddDrink(-_congaLine.DrunkFactor);
-            _gameOverSound.Play();
+
+            if (win)
+                _winSound.Play();
+            else
+                _loseSound.Play();
+
             MediaPlayer.Stop();
             _congaLine.Stop();
             _cameraController.SetCameraBehavior(new GameOverCameraBehavior(_cameraController.Camera, _congaLine));
@@ -447,7 +317,6 @@ namespace DanceParty.GameStates
             //Set the Graphics Device to render to our Render Target #1
             //instead of the back buffer.
             _graphicsDevice.SetRenderTarget(currentFrame);
-            _graphicsDevice.Clear(Color.Black);
 
             SamplerState ss = new SamplerState();
             ss.AddressU = TextureAddressMode.Clamp;
@@ -484,9 +353,8 @@ namespace DanceParty.GameStates
             _spriteBatch.Begin();
             _spriteBatch.Draw(currentFrame, _graphicsDevice.Viewport.Bounds, Color.White);
 
-
             if (!_isGameOver)
-                _mainHud.Draw(_music.Duration - MediaPlayer.PlayPosition, _congaLine.Count, _congaLine.DrunkFactor);
+                _mainHud.Draw(_music.Duration - MediaPlayer.PlayPosition, _score.Score, _congaLine.DrunkFactor);
             else
                 _gameOverHud.Draw(_spriteBatch);
 

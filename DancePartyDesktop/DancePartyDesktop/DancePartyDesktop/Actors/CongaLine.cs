@@ -20,6 +20,14 @@ namespace DanceParty.Actors
             }
         }
 
+        public float DrunkRatio
+        {
+            get
+            {
+                return DrunkFactor / 255f;
+            }
+        }
+
         private DrunkController _drunkController;
         private List<Dancer> _dancers;
         private bool _stopped;

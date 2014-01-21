@@ -51,8 +51,6 @@ namespace DanceParty
             this.IsMouseVisible = true;
             GraphicsDeviceManager = new GraphicsDeviceManager(this);
             //GraphicsDeviceManager.IsFullScreen = true;
-//            GraphicsDeviceManager.PreferredBackBufferWidth = 800;
-//            GraphicsDeviceManager.PreferredBackBufferHeight = 480;
             _gameStateManager = GameStateManager.Instance;
             _fpsTracker = new FPSTracker();
 
@@ -114,14 +112,9 @@ namespace DanceParty
 
         protected override void Draw(GameTime gameTime)
         {
-            DrawsPerFrame = 0;
            _gameStateManager.GetCurrentState().Draw(gameTime);
            _fpsTracker.Update(gameTime);
-
-           SpriteBatch.Begin();
-           SpriteBatch.DrawString(FontManager.Instance.BangersSmall, string.Format("FPS: {0}\r\nDraws: {1}", _fpsTracker.CurrentFPS, DrawsPerFrame), Vector2.Zero, Color.White);
-           SpriteBatch.End();
-            base.Draw(gameTime);
+           base.Draw(gameTime);
         }
     }
 }
