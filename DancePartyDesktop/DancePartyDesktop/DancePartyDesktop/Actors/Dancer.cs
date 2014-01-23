@@ -61,7 +61,6 @@ namespace DanceParty.Actors
         /// </summary>
         private IDancerBehavior _dancerBehavior;
 
-
         private AnimatedModelInstance _modelInstance;
 
         public Dancer(AnimatedModelInstance modelInstance)
@@ -108,7 +107,12 @@ namespace DanceParty.Actors
 
         public bool CollidesWith(Dancer dancer)
         {
-            return Vector3.DistanceSquared(Position, dancer.Position) < 10000;
+            float dist2 = Vector3.DistanceSquared(Position, dancer.Position);
+
+            if (dancer.IsHostile())
+                return dist2 < 8000;
+
+            return dist2 < 10000;
         }
 
         public bool CollidesWith(Drink drink)

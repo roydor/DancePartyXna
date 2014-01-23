@@ -6,30 +6,23 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using DanceParty.Actors;
 using DanceParty.Cameras;
 using DanceParty.Utilities;
 
 namespace DanceParty
 {
-    public enum DancerType
-    {
-        Male,
-        Female,
-    }
-
     public class BatchedAnimatedModelContainer
     {
         public BatchRenderedAnimatedModel BatchedModel;
         public List<AnimatedModelInstance> ActiveInstances;
         public Texture2D Texture;
-        public DancerType DancerType;
 
-        public BatchedAnimatedModelContainer(BatchRenderedAnimatedModel batchedModel, Texture2D texture, DancerType dancerType)
+        public BatchedAnimatedModelContainer(BatchRenderedAnimatedModel batchedModel, Texture2D texture)
         {
             ActiveInstances = new List<AnimatedModelInstance>();
             BatchedModel = batchedModel;
             Texture = texture;
-            DancerType = dancerType;
         }
 
         public void DrawInstances(PerspectiveCamera camera)
@@ -67,58 +60,30 @@ namespace DanceParty
 
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {   
-            //// Create the animated models and process them.
-            BatchRenderedAnimatedModel animatedMaleModel =
-                new BatchRenderedAnimatedModel(
-                    graphicsDevice,
-                    contentManager.Load<Model>("Models\\male_low"));
+            // This isn't so good, I want to reuse the same batchrenderedanimatedmodel class, with different textures
 
-            //BatchRenderedAnimatedModel animatedFemaleMOdel =
-            //    new BatchRenderedAnimatedModel(
-            //        graphicsDevice,
-            //        contentManager.Load<Model>("Models\\female_low"));
+            Dictionary<string, BatchRenderedAnimatedModel> modelMap = new Dictionary<string, BatchRenderedAnimatedModel>();
+            foreach (DancerTypeData dancerData in DancerTypes.Dancers)
+            {
 
-            BatchRenderedAnimatedModel animatedBobDress =
-                new BatchRenderedAnimatedModel(
-                    graphicsDevice,
-                    contentManager.Load<Model>("Models\\female1"));
+                BatchRenderedAnimatedModel animatedModel;
 
-            BatchRenderedAnimatedModel animatedFemale2 =
-                new BatchRenderedAnimatedModel(
-                    graphicsDevice,
-                    contentManager.Load<Model>("Models\\female2"));
+                if (!modelMap.TryGetValue(dancerData.ModelAssetPath, out animatedModel))
+                {
+                    animatedModel = new BatchRenderedAnimatedModel(
+                        graphicsDevice,
+                        contentManager.Load<Model>(dancerData.ModelAssetPath));
 
-            // Create instance containers to group skins with the models.
-            BatchedAnimatedModelContainer maleContainer =
-                new BatchedAnimatedModelContainer(
-                    animatedMaleModel,
-                    contentManager.Load<Texture2D>("Textures\\male_0"),
-                    DancerType.Male);
+                    modelMap[dancerData.ModelAssetPath] = animatedModel;
+                }
+                
+                BatchedAnimatedModelContainer animatedContainer =
+                    new BatchedAnimatedModelContainer(
+                        animatedModel,
+                        contentManager.Load<Texture2D>(dancerData.TextureAssetPath));
 
-            //BatchedAnimatedModelContainer femaleContainer =
-            //    new BatchedAnimatedModelContainer(
-            //        animatedFemaleMOdel,
-            //        contentManager.Load<Texture2D>("Textures\\female_0"),
-            //        DancerType.Female);
-
-            BatchedAnimatedModelContainer bobContainer =
-             new BatchedAnimatedModelContainer(
-                 animatedBobDress,
-                 contentManager.Load<Texture2D>("Textures\\female1_0"),
-                 DancerType.Female);
-
-            BatchedAnimatedModelContainer animatedFemale2Container =
-                new BatchedAnimatedModelContainer(
-                    animatedFemale2,
-                    contentManager.Load<Texture2D>("Textures\\female2_0"),
-                    DancerType.Female);
-
-            _batchedAnimatedModelContainers.Add(maleContainer);
-            //_batchedAnimatedModelContainers.Add(femaleContainer);
-            _batchedAnimatedModelContainers.Add(bobContainer);
-            _batchedAnimatedModelContainers.Add(animatedFemale2Container);
-
-
+                _batchedAnimatedModelContainers.Add(animatedContainer);
+            }
         }
 
         public AnimatedModelInstance GetAnimatedModelInstance()

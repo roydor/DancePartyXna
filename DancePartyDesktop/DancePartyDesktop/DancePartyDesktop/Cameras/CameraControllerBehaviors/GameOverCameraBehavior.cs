@@ -25,7 +25,7 @@ namespace DanceParty.Cameras.CameraControllerBehaviors
         
         public void Update(GameTime gameTime)
         {
-            _camera.LookAt = Vector3.Lerp(_camera.LookAt, _congaLine.LastFallenDancer.Position, 0.02f);
+            _camera.LookAt = Vector3.Lerp(_camera.LookAt, (_congaLine.LastFallenDancer.Position + new Vector3(0, 50f, 0)), 0.02f);
         }
     }
 }

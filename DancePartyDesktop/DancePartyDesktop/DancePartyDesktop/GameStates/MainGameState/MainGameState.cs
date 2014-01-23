@@ -28,7 +28,6 @@ namespace DanceParty.GameStates
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
         #endregion
-
         public static float DanceFloorBoundary = 1350f;
         public static int MaxDancersOnFloor = 40;
 
@@ -250,7 +249,7 @@ namespace DanceParty.GameStates
             // Does the line collide with anyone
             for (int i = 0; i < _dancers.Count; i++)
             {
-                if (_dancers[i].CollidesWith(_congaLine.LeadDancer))
+                if (_congaLine.LeadDancer.CollidesWith(_dancers[i]))
                 {
                     _congaLine.AppendDancer(_dancers[i]);
                     _dancers.RemoveAt(i--);
@@ -278,6 +277,7 @@ namespace DanceParty.GameStates
             else
                 _loseSound.Play();
 
+            _score.FinalizeScore();
             MediaPlayer.Stop();
             _congaLine.Stop();
             _cameraController.SetCameraBehavior(new GameOverCameraBehavior(_cameraController.Camera, _congaLine));
@@ -374,7 +374,6 @@ namespace DanceParty.GameStates
                 }
 
                 mesh.Draw();
-                DancePartyGame.DrawsPerFrame++;
             }
         }
 

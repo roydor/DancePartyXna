@@ -79,7 +79,7 @@ namespace DanceParty.Utilities
             _skinnedEffect = new SkinnedEffect(_graphicsDevice);
             _skinnedEffect.EnableDefaultLighting();
             _skinnedEffect.AmbientLightColor = Color.Gray.ToVector3();
-            _skinnedEffect.SpecularColor = Color.Gray.ToVector3();
+            _skinnedEffect.SpecularColor = Color.Black.ToVector3();
             _skinnedEffect.PreferPerPixelLighting = false;
 
             SetupInstancedVertexData();

@@ -92,6 +92,7 @@
     <Compile Include="Actors\DancerBehaviors\LeadDancerBehavior.cs" />
     <Compile Include="Actors\DancerEmitter.cs" />
     <Compile Include="Actors\DancerFactory.cs" />
+    <Compile Include="Actors\DancerTypes.cs" />
     <Compile Include="Actors\Drink.cs" />
     <Compile Include="Actors\DrinkEmitter.cs" />
     <Compile Include="Actors\DrunkController.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="GameStates\MainGameState\MainGameState.cs" />
     <Compile Include="GameStates\MainGameState\ScoreComponent.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
+    <Compile Include="GameStates\SummaryState\SummaryState.cs" />
     <Compile Include="PointerInputManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
